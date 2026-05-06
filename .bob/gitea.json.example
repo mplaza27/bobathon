@@ -1,0 +1,5 @@
+{
+  "baseUrl": "https://gitea.apps.<your-cluster-domain>",
+  "username": "<your-gitea-username>",
+  "token": "<your-gitea-personal-access-token>"
+}

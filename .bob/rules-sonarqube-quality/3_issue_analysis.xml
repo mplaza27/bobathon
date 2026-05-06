@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <rule id="sonarqube-issues-001" priority="critical">
+    <title>Issue Severity Classification</title>
+    <description>
+      Analyze and prioritize issues by severity:
+      
+      BLOCKER (Highest Priority)
+      - Bug that represents a critical security vulnerability
+      - Code that will cause application crash or data loss
+      - Must be fixed immediately before deployment
+      - Examples: SQL injection, null pointer dereference in critical path
+      
+      CRITICAL
+      - Bug with high probability of impacting production
+      - Security vulnerability that could be exploited
+      - Should be fixed before next release
+      - Examples: Resource leaks, unhandled exceptions, weak cryptography
+      
+      MAJOR
+      - Bug that could impact production under specific conditions
+      - Code smell that significantly impacts maintainability
+      - Should be fixed in current sprint
+      - Examples: Unused variables, complex methods, duplicated code
+      
+      MINOR
+      - Code smell with minor impact on maintainability
+      - Can be fixed in future sprints
+      - Examples: Missing javadoc, naming conventions
+      
+      INFO
+      - Informational findings
+      - Best practice suggestions
+      - Lowest priority
+    </description>
+  </rule>
+
+  <rule id="sonarqube-issues-002" priority="high">
+    <title>Issue Type Categories</title>
+    <description>
+      Categorize issues by type:
+      
+      BUG
+      - Code that is demonstrably wrong or highly likely to yield unexpected behavior
+      - Focus: Reliability
+      - Examples: Null pointer exceptions, resource leaks, logic errors
+      
+      VULNERABILITY
+      - Security-related issues that could be exploited
+      - Focus: Security
+      - Examples: SQL injection, XSS, weak encryption, hardcoded credentials
+      
+      CODE_SMELL
+      - Maintainability issues that make code harder to understand or modify
+      - Focus: Maintainability
+      - Examples: Complex methods, duplicated code, long parameter lists
+      
+      SECURITY_HOTSPOT
+      - Security-sensitive code that requires manual review
+      - Focus: Security review
+      - Examples: Authentication, authorization, data validation, cryptography
+    </description>
+  </rule>
+
+  <rule id="sonarqube-issues-003" priority="high">
+    <title>Remediation Guidelines</title>
+    <description>
+      Provide actionable remediation for common issues:
+      
+      NULL POINTER EXCEPTIONS
+      - Add null checks before dereferencing
+      - Use Optional<T> for potentially null values
+      - Apply @NonNull/@Nullable annotations
+      
+      RESOURCE LEAKS
+      - Use try-with-resources for AutoCloseable objects
+      - Ensure finally blocks close resources
+      - Use Java 21 structured concurrency patterns
+      
+      SQL INJECTION
+      - Use PreparedStatement with parameterized queries
+      - Never concatenate user input into SQL
+      - Use ORM frameworks properly
+      
+      COMPLEX METHODS
+      - Extract methods to reduce complexity
+      - Apply Single Responsibility Principle
+      - Refactor nested conditionals
+      
+      DUPLICATED CODE
+      - Extract common code into reusable methods
+      - Create utility classes for shared functionality
+      - Use inheritance or composition appropriately
+      
+      SECURITY VULNERABILITIES
+      - Update dependencies to patched versions
+      - Use secure coding practices
+      - Apply principle of least privilege
+      - Validate and sanitize all inputs
+    </description>
+  </rule>
+
+  <rule id="sonarqube-issues-004" priority="medium">
+    <title>Technical Debt Analysis</title>
+    <description>
+      Analyze and report technical debt:
+      
+      CALCULATION
+      - Technical Debt = Effort to fix all code smells
+      - Measured in days (e.g., "5d 3h")
+      - Debt Ratio = Technical Debt / Development Cost
+      
+      ACCEPTABLE LEVELS
+      - Debt Ratio < 5%: Excellent
+      - Debt Ratio 5-10%: Good
+      - Debt Ratio 10-20%: Acceptable
+      - Debt Ratio > 20%: Needs attention
+      
+      PRIORITIZATION
+      1. Fix issues in frequently changed files first
+      2. Address high-severity code smells
+      3. Reduce complexity in critical paths
+      4. Eliminate duplications in core modules
+      
+      REPORTING
+      - Include debt ratio in quality reports
+      - Track debt trend over time
+      - Identify modules with highest debt
+      - Suggest debt reduction strategies
+    </description>
+  </rule>
+</rules>
+
+<!-- Made with Bob -->

@@ -1,0 +1,108 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+
+# Bob/AI Assistant
+.cursor/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary Files
+*.tmp
+*.temp
+.cache/
+tmp/
+
+# Build Artifacts
+*.class
+*.jar
+*.war
+*.ear
+target/
+build/
+dist/
+out/
+
+# Java/Maven build artifacts in nested lab projects
+lab1/*/target/
+lab2/*/target/
+lab3/*/target/
+
+# Backup Files
+*.bak
+*.backup
+*-backup.*
+
+# Node modules (if any JavaScript tooling is added)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python (if any Python scripts are added)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Test Results
+test-results/
+coverage/
+.nyc_output/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Keep committed example env files
+!.env.example
+!lab2/.env.example
+
+# Bob MCP config contains real tokens - never commit the real one
+.bob/mcp.json
+!.bob/mcp.json.example
+
+# Gitea credentials - never commit the real one
+.bob/gitea.json
+!.bob/gitea.json.example
+
+# Generated apps and private lab outputs
+lab1/modernized-ecommerce-app/
+
+# Personal Notes
+NOTES.md
+TODO.md
+scratch/
+personal/
+
+# ACE/MQ Specific
+*.bar
+*.generated
+*.trace
+*.compiled
+
+# Made with Bob

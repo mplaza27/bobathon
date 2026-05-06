@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<example-workflows>
+    <overview>
+        Complete end-to-end examples of using the DISH SDLC mode to implement
+        features based on Jira user stories. These examples demonstrate the full
+        workflow from fetching requirements to completing implementation.
+    </overview>
+
+    <example name="implementing-payment-feature">
+        <scenario>User asks: "Work on KAN-2" or "Implement the payment feature from KAN-2"</scenario>
+        <jira-story>
+            <key>KAN-2</key>
+            <summary>Add support for multiple payment methods</summary>
+            <description>
+                As a customer, I want to be able to pay using credit card, PayPal, or
+                bank transfer so that I have flexibility in how I complete my purchase.
+            </description>
+            <acceptance-criteria><![CDATA[
+- [ ] System accepts credit card payments
+- [ ] System accepts PayPal payments
+- [ ] System accepts bank transfer payments
+- [ ] Payment method is validated before processing
+- [ ] Failed payments are handled gracefully
+- [ ] Payment confirmation is sent to customer
+- [ ] Automated deployment required after SonarQube quality gate passes
+- [ ] Target OpenShift namespace: lab-kan2-ab
+            ]]></acceptance-criteria>
+        </jira-story>
+
+        <workflow-steps>
+            <step number="1">
+                <phase>Fetch Jira Issue</phase>
+                <action>Use MCP Jira tools to retrieve KAN-2</action>
+                <response-to-user><![CDATA[
+I'll fetch the details for issue KAN-2 from Jira.
+
+[Using MCP Jira tools to fetch issue KAN-2...]
+
+Found issue KAN-2: "Add support for multiple payment methods"
+
+**Summary:** Add support for multiple payment methods
+
+**Description:**
+As a customer, I want to be able to pay using credit card, PayPal, or bank
+transfer so that I have flexibility in how I complete my purchase.
+
+**Acceptance Criteria:**
+- System accepts credit card payments
+- System accepts PayPal payments
+- System accepts bank transfer payments
+- Payment method is validated before processing
+- Failed payments are handled gracefully
+- Payment confirmation is sent to customer
+- Automated deployment required after SonarQube quality gate passes
+- Target OpenShift namespace: lab-kan2-ab
+
+I'll now analyze the current codebase to understand the existing payment
+implementation and plan the changes needed.
+                ]]></response-to-user>
+            </step>
+
+            <step number="2">
+                <phase>Analyze Codebase</phase>
+                <action>Search for existing payment-related code</action>
+                <tools-used>
+                    <tool>search_files - Find payment-related files</tool>
+                    <tool>list_code_definition_names - Get overview of payment classes</tool>
+                    <tool>read_file - Examine PaymentService and related classes</tool>
+                </tools-used>
+                <findings><![CDATA[
+Current implementation:
+- PaymentService.java exists with basic payment processing
+- Payment.java is a base class
+- Only CreditCardPayment.java is implemented
+- PaymentController.java handles payment endpoints
+- Need to add PayPalPayment and BankTransferPayment classes
+- Need to update PaymentService to handle multiple payment types
+                ]]></findings>
+            </step>
+
+            <step number="3">
+                <phase>Plan Implementation</phase>
+                <action>Create implementation plan based on analysis</action>
+                <plan><![CDATA[
+Implementation Plan:
+1. Create PayPalPayment.java class extending Payment
+2. Create BankTransferPayment.java class extending Payment
+3. Update PaymentService to handle all payment types
+4. Add validation for each payment method
+5. Implement error handling for failed payments
+6. Add payment confirmation logic
+7. Create unit tests for new payment types
+8. Update PaymentController if needed
+9. Deploy to OpenShift namespace lab-kan2-ab after the SonarQube quality gate passes
+                ]]></plan>
+            </step>
+
+            <step number="4">
+                <phase>Implementation</phase>
+                <action>Create new payment classes</action>
+                <code-changes>
+                    <change>
+                        <file>src/main/java/com/example/ecommerce/model/PayPalPayment.java</file>
+                        <operation>create</operation>
+                        <description>New class for PayPal payments</description>
+                    </change>
+                    <change>
+                        <file>src/main/java/com/example/ecommerce/model/BankTransferPayment.java</file>
+                        <operation>create</operation>
+                        <description>New class for bank transfer payments</description>
+                    </change>
+                    <change>
+                        <file>src/main/java/com/example/ecommerce/service/PaymentService.java</file>
+                        <operation>modify</operation>
+                        <description>Add support for new payment types</description>
+                    </change>
+                </code-changes>
+            </step>
+
+            <step number="5">
+                <phase>Testing</phase>
+                <action>Create and run tests</action>
+                <test-files>
+                    <file>src/test/java/com/example/ecommerce/model/PayPalPaymentTest.java</file>
+                    <file>src/test/java/com/example/ecommerce/model/BankTransferPaymentTest.java</file>
+                    <file>src/test/java/com/example/ecommerce/service/PaymentServiceTest.java</file>
+                </test-files>
+                <command>mvn test</command>
+            </step>
+
+            <step number="6">
+                <phase>Quality Analysis</phase>
+                <action>Run SonarQube analysis</action>
+                <checks>
+                    <check>Code coverage meets threshold</check>
+                    <check>No security vulnerabilities</check>
+                    <check>No critical code smells</check>
+                    <check>Quality gate passes</check>
+                </checks>
+            </step>
+
+            <step number="7">
+                <phase>Deployment</phase>
+                <action>Deploy through the OpenShift MCP server after quality verification</action>
+                <checks>
+                    <check>Namespace lab-kan2-ab is allowed by the OpenShift MCP server</check>
+                    <check>Rollout completes successfully</check>
+                    <check>Route URL is available and healthy</check>
+                </checks>
+            </step>
+
+            <step number="8">
+                <phase>Update Jira</phase>
+                <action>Add comment and update status</action>
+                <jira-comment><![CDATA[
+Implementation complete for KAN-2.
+
+Changes made:
+- Added PayPalPayment class with email validation
+- Added BankTransferPayment class with account number validation
+- Updated PaymentService to handle all three payment types
+- Implemented validation for each payment method
+- Added error handling for failed payments
+- Implemented payment confirmation logic
+- Created comprehensive unit tests (95% coverage)
+
+All acceptance criteria met:
+✓ System accepts credit card payments
+✓ System accepts PayPal payments
+✓ System accepts bank transfer payments
+✓ Payment method is validated before processing
+✓ Failed payments are handled gracefully
+✓ Payment confirmation is sent to customer
+
+SonarQube analysis: Quality gate PASSED
+- 0 bugs
+- 0 vulnerabilities
+- Code coverage: 95%
+- Maintainability rating: A
+
+Deployment:
+- Automated deployment executed through the OpenShift MCP server
+- Namespace: lab-kan2-ab
+- Route URL: https://payment-service-lab-kan2-ab.apps.<cluster-domain>
+
+Ready for code review.
+                ]]></jira-comment>
+                <status-transition>In Progress → Code Review</status-transition>
+            </step>
+
+            <step number="9">
+                <phase>Completion</phase>
+                <action>Present results to user</action>
+                <completion-message><![CDATA[
+Implementation complete for KAN-2: "Add support for multiple payment methods"
+
+**Changes Made:**
+- Created PayPalPayment class with email validation
+- Created BankTransferPayment class with account validation
+- Updated PaymentService to support all payment types
+- Added comprehensive error handling
+- Implemented payment confirmation logic
+
+**Testing:**
+- All unit tests passing (95% coverage)
+- Integration tests verified
+- Edge cases tested
+
+**Quality:**
+- SonarQube quality gate: PASSED
+- 0 bugs, 0 vulnerabilities
+- Maintainability rating: A
+
+**Jira Updated:**
+- Added implementation summary
+- Status changed to "Code Review"
+
+**Deployment:**
+- Deployed automatically to namespace `lab-kan2-ab`
+- Route verified and shared back to Jira
+
+All acceptance criteria have been met and the feature is ready for review.
+                ]]></completion-message>
+            </step>
+        </workflow-steps>
+    </example>
+
+    <example name="modernizing-java-version">
+        <scenario>User asks: "Modernize the application to Java 21" or "Upgrade from Java 8 to Java 21"</scenario>
+
+        <workflow-steps>
+            <step number="1">
+                <phase>Analysis</phase>
+                <action>Analyze current Java version and dependencies</action>
+                <checks>
+                    <check>Review pom.xml for Java version</check>
+                    <check>Identify deprecated APIs in use</check>
+                    <check>Check dependency compatibility</check>
+                    <check>Review code for Java 8 specific patterns</check>
+                    <check>Identify high-risk compatibility areas: domain models, enums, repository null handling, parse methods, and boolean helper methods</check>
+                </checks>
+            </step>
+
+            <step number="2">
+                <phase>Planning</phase>
+                <action>Create modernization plan</action>
+                <plan><![CDATA[
+Modernization Plan:
+1. Update pom.xml to Java 21
+2. Update Spring Boot to 3.x if required by the migration target
+3. Replace deprecated APIs where safe
+   - Date/Calendar → LocalDate/LocalDateTime
+   - Anonymous classes → Lambda expressions
+   - Verbose loops → Stream API where readability improves
+4. Adopt Java 21 features only where they do not alter tested behavior
+   - Records for truly immutable domain/data classes
+   - Switch expressions where semantics remain identical
+   - Text blocks for multiline literals
+   - Pattern matching where clarity improves and behavior is unchanged
+5. Review existing unit tests before changing domain models, enums, repositories, and parsing logic
+6. Preserve public behavior unless the Jira story or user explicitly requires change
+7. Run focused tests after each high-risk refactor
+8. Run full test suite and fix compatibility issues
+9. Run SonarQube analysis
+                ]]></plan>
+            </step>
+
+            <step number="2.5">
+                <phase>Compatibility Review</phase>
+                <action>Create a compatibility checklist before refactoring domain models, enums, repositories, or parsing methods</action>
+                <checks>
+                    <check>Review existing unit tests for expected exception behavior and null handling</check>
+                    <check>Review enum values, descriptions, and parse methods such as fromString(String)</check>
+                    <check>Review helper methods such as isCompleted(), isActive(), isExpired(), or status predicates</check>
+                    <check>Review whether constructors or setters currently allow invalid or null state for negative tests</check>
+                    <check>Review repository and service methods for legacy null-handling contracts</check>
+                    <check>Document any behavior that must remain exactly unchanged</check>
+                </checks>
+            </step>
+
+            <step number="3">
+                <phase>Implementation</phase>
+                <action>Execute modernization incrementally</action>
+                <changes>
+                    <change>Update pom.xml Java version and dependencies</change>
+                    <change>Replace Date with LocalDateTime in model classes where behavior remains equivalent</change>
+                    <change>Convert anonymous classes to lambdas where behavior is unchanged</change>
+                    <change>Refactor loops to Stream API only when clarity improves and semantics remain identical</change>
+                    <change>Convert only truly immutable classes to records, while preserving legacy getters and test-facing API contracts</change>
+                    <change>Use switch expressions only when result semantics remain exactly the same</change>
+                    <change>Do not change enum descriptions, parser behavior, helper semantics, or null handling unless explicitly required</change>
+                </changes>
+            </step>
+
+            <step number="4">
+                <phase>Validation</phase>
+                <action>Verify modernization success</action>
+                <validation-steps>
+                    <step>Run focused tests for each modified model, enum, repository, parser, or helper method</step>
+                    <step>Run mvn clean install</step>
+                    <step>Execute all tests</step>
+                    <step>Investigate failures for compatibility regressions before making further changes</step>
+                    <step>Run application and verify functionality</step>
+                    <step>Check SonarQube for issues</step>
+                    <step>Perform performance testing if needed</step>
+                </validation-steps>
+            </step>
+        </workflow-steps>
+    </example>
+
+    <example name="fixing-sonarqube-issues">
+        <scenario>User asks: "Fix the SonarQube issues" or "Address code quality problems"</scenario>
+        <workflow-steps>
+            <step number="1">
+                <phase>Fetch SonarQube Report</phase>
+                <action>Use MCP SonarQube tools to get analysis results</action>
+                <information-gathered>
+                    <item>List of bugs by severity</item>
+                    <item>Security vulnerabilities</item>
+                    <item>Code smells</item>
+                    <item>Coverage gaps</item>
+                    <item>Code duplications</item>
+                </information-gathered>
+            </step>
+
+            <step number="2">
+                <phase>Prioritize Issues</phase>
+                <action>Sort issues by priority</action>
+                <priority-order>
+                    <priority>Security vulnerabilities (all)</priority>
+                    <priority>Blocker bugs</priority>
+                    <priority>Critical bugs</priority>
+                    <priority>Major bugs</priority>
+                    <priority>Critical code smells</priority>
+                    <priority>Coverage gaps</priority>
+                </priority-order>
+            </step>
+
+            <step number="3">
+                <phase>Fix Issues</phase>
+                <action>Address each issue systematically</action>
+                <example-fixes>
+                    <fix>
+                        <issue>SQL Injection vulnerability in OrderRepository</issue>
+                        <solution>Replace string concatenation with parameterized query</solution>
+                    </fix>
+                    <fix>
+                        <issue>Unused private method in PaymentService</issue>
+                        <solution>Remove unused method</solution>
+                    </fix>
+                    <fix>
+                        <issue>Duplicated code in validation logic</issue>
+                        <solution>Extract to shared validation utility</solution>
+                    </fix>
+                    <fix>
+                        <issue>Low test coverage in OrderService</issue>
+                        <solution>Add unit tests for uncovered methods</solution>
+                    </fix>
+                </example-fixes>
+            </step>
+
+            <step number="4">
+                <phase>Re-analyze</phase>
+                <action>Run SonarQube analysis again</action>
+                <verification>
+                    <check>Verify all critical issues resolved</check>
+                    <check>Confirm quality gate passes</check>
+                    <check>Check no new issues introduced</check>
+                </verification>
+            </step>
+        </workflow-steps>
+    </example>
+
+    <example name="implementing-from-epic">
+        <scenario>User asks: "Work on the payment epic" or "Implement stories from EPIC-1"</scenario>
+        <workflow-steps>
+            <step number="1">
+                <phase>Fetch Epic Details</phase>
+                <action>Use MCP Jira tools to get epic and related stories</action>
+                <information>
+                    <item>Epic summary and description</item>
+                    <item>List of stories in the epic</item>
+                    <item>Story priorities and dependencies</item>
+                    <item>Overall epic progress</item>
+                </information>
+            </step>
+
+            <step number="2">
+                <phase>Identify Next Story</phase>
+                <action>Determine which story to work on</action>
+                <criteria>
+                    <criterion>Story priority</criterion>
+                    <criterion>Dependencies on other stories</criterion>
+                    <criterion>Story status (To Do vs In Progress)</criterion>
+                    <criterion>Story points (complexity)</criterion>
+                </criteria>
+            </step>
+
+            <step number="3">
+                <phase>Implement Story</phase>
+                <action>Follow standard workflow for the selected story</action>
+                <reference>See "implementing-payment-feature" example</reference>
+            </step>
+
+            <step number="4">
+                <phase>Update Epic Progress</phase>
+                <action>Update epic with progress information</action>
+                <updates>
+                    <update>Mark story as complete</update>
+                    <update>Update epic progress percentage</update>
+                    <update>Identify next story to work on</update>
+                </updates>
+            </step>
+        </workflow-steps>
+    </example>
+
+    <example name="handling-bugfix">
+        <scenario>User asks: "Fix bug KAN-5" or "Debug the payment processing issue"</scenario>
+        <workflow-steps>
+            <step number="1">
+                <phase>Fetch Bug Details</phase>
+                <action>Get bug report from Jira</action>
+                <information>
+                    <item>Bug description</item>
+                    <item>Steps to reproduce</item>
+                    <item>Expected vs actual behavior</item>
+                    <item>Environment details</item>
+                    <item>Error logs or stack traces</item>
+                </information>
+            </step>
+
+            <step number="2">
+                <phase>Reproduce Issue</phase>
+                <action>Verify the bug exists</action>
+                <steps>
+                    <step>Set up test environment</step>
+                    <step>Follow reproduction steps</step>
+                    <step>Confirm unexpected behavior</step>
+                    <step>Gather additional diagnostic information</step>
+                </steps>
+            </step>
+
+            <step number="3">
+                <phase>Root Cause Analysis</phase>
+                <action>Identify the source of the bug</action>
+                <techniques>
+                    <technique>Review error logs and stack traces</technique>
+                    <technique>Use debugger to step through code</technique>
+                    <technique>Check recent code changes</technique>
+                    <technique>Review related code and dependencies</technique>
+                </techniques>
+            </step>
+
+            <step number="4">
+                <phase>Implement Fix</phase>
+                <action>Fix the bug and prevent regression</action>
+                <steps>
+                    <step>Implement the fix</step>
+                    <step>Add regression test</step>
+                    <step>Verify fix resolves the issue</step>
+                    <step>Check for similar issues elsewhere</step>
+                </steps>
+            </step>
+
+            <step number="5">
+                <phase>Validation</phase>
+                <action>Thoroughly test the fix</action>
+                <testing>
+                    <test>Run regression test</test>
+                    <test>Run full test suite</test>
+                    <test>Manual testing of affected functionality</test>
+                    <test>Verify no new issues introduced</test>
+                </testing>
+            </step>
+
+            <step number="6">
+                <phase>Update Jira</phase>
+                <action>Document the fix</action>
+                <documentation>
+                    <item>Root cause explanation</item>
+                    <item>Fix description</item>
+                    <item>Testing performed</item>
+                    <item>Any related issues found</item>
+                </documentation>
+            </step>
+        </workflow-steps>
+    </example>
+
+    <communication-patterns>
+        <pattern name="starting-work">
+            <user-message>"Work on KAN-2"</user-message>
+            <bot-response><![CDATA[
+I'll fetch the details for issue KAN-2 from Jira and begin implementation.
+
+[Fetching issue KAN-2...]
+
+Found: "Add support for multiple payment methods"... I'll analyze the current codebase and implement the required changes according
+to the acceptance criteria. I'll keep you updated on progress.
+            ]]></bot-response>
+        </pattern>
+
+        <pattern name="progress-update">
+            <bot-message><![CDATA[
+Progress update on KAN-2:
+
+✓ Analyzed existing payment implementation
+✓ Created PayPalPayment class
+✓ Created BankTransferPayment class
+⏳ Currently updating PaymentService to handle new payment types
+⏳ Next: Add validation and error handling
+            ]]></bot-message>
+        </pattern>
+
+        <pattern name="asking-for-clarification">
+            <bot-message><![CDATA[
+I need clarification on the acceptance criteria for KAN-2:
+
+The story mentions "Failed payments are handled gracefully" but doesn't specify
+the exact behavior. Should failed payments:
+
+1. Retry automatically (how many times?)
+2. Send notification to customer immediately
+3. Log for manual review
+4. All of the above
+
+Please clarify so I can implement the correct behavior.
+            ]]></bot-message>
+        </pattern>
+
+        <pattern name="reporting-blocker">
+            <bot-message><![CDATA[
+Blocker encountered on KAN-2:
+
+The PayPal API credentials are not configured in the environment. I need:
+- PayPal Client ID
+- PayPal Client Secret
+- PayPal API endpoint (sandbox or production)
+
+I've added a comment to the Jira issue requesting this information.
+I can continue with the other payment methods while waiting for the credentials.
+            ]]></bot-message>
+        </pattern>
+
+        <pattern name="completion">
+            <bot-message><![CDATA[
+Implementation complete for KAN-2: "Add support for multiple payment methods"
+
+**Summary:**
+- Added PayPal and bank transfer payment support
+- Implemented validation for all payment types
+- Added comprehensive error handling
+- Created unit tests (95% coverage)
+- SonarQube quality gate: PASSED
+
+**All acceptance criteria met:**
+✓ System accepts credit card payments
+✓ System accepts PayPal payments
+✓ System accepts bank transfer payments
+✓ Payment method is validated before processing
+✓ Failed payments are handled gracefully
+✓ Payment confirmation is sent to customer
+
+**Jira updated:**
+- Status: Code Review
+- Comment added with implementation details
+
+Ready for review!
+            ]]></bot-message>
+        </pattern>
+    </communication-patterns>
+
+    <tips-for-success>
+        <tip title="Always Start with Jira">
+            <description>
+                Fetch the issue details first to ensure you understand requirements
+                before analyzing code or making changes.
+            </description>
+        </tip>
+
+        <tip title="Communicate Progress">
+            <description>
+                Keep the user informed of progress, especially for long-running tasks.
+                Update Jira regularly so the team knows the status.
+            </description>
+        </tip>
+
+        <tip title="Ask When Unclear">
+            <description>
+                If requirements are ambiguous or missing information, ask for
+                clarification rather than making assumptions.
+            </description>
+        </tip>
+
+        <tip title="Test Thoroughly">
+            <description>
+                Don't just implement the happy path. Test edge cases, error conditions,
+                and ensure good test coverage.
+            </description>
+        </tip>
+
+        <tip title="Preserve Compatibility During Modernization">
+            <description>
+                When modernizing Java versions or converting classes to records,
+                preserve existing public behavior unless requirements explicitly call
+                for change. Existing tests are the compatibility baseline.
+            </description>
+        </tip>
+
+        <tip title="Run Quality Checks">
+            <description>
+                Always run SonarQube analysis before marking work complete. Address
+                critical issues before requesting review.
+            </description>
+        </tip>
+
+        <tip title="Document Decisions">
+            <description>
+                Document important technical decisions in code comments and Jira.
+                Future developers will thank you.
+            </description>
+        </tip>
+
+        <tip title="Follow the Workflow">
+            <description>
+                Follow the established workflow: Fetch → Analyze → Plan → Implement →
+                Test → Quality Check → Update Jira → Complete
+            </description>
+        </tip>
+    </tips-for-success>
+</example-workflows>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<local-deployment-guide>
+    <overview>
+        This guide defines when and how the Smart SDLC mode can run the modernized Java application locally
+        without requiring OpenShift, Gitea, or any external infrastructure.
+    </overview>
+
+    <deployment-trigger>
+        <required-acceptance-criteria>
+            <criterion>Application must build successfully with Maven</criterion>
+            <criterion>All tests must pass with &gt;60% coverage</criterion>
+            <criterion>Application must run locally on http://localhost:8080</criterion>
+        </required-acceptance-criteria>
+
+        <rule>Local deployment is always performed after code modernization is complete.</rule>
+        <rule>No external services or cloud platforms are required.</rule>
+    </deployment-trigger>
+
+    <guardrails>
+        <rule>Build only after all code changes are complete and saved.</rule>
+        <rule>Run tests before attempting to run the application.</rule>
+        <rule>Verify Java 21 is being used before building.</rule>
+        <rule>Never use Java preview features - the application must run with standard Java 21.</rule>
+        <rule>Ensure all dependencies are compatible with Java 21 and Spring Boot 3.x.</rule>
+        <rule>Check that the application starts without errors before marking deployment complete. Use IBM Bob's embedded browser feature to run deployment tests if needed.</rule>
+        <rule>Verify all REST endpoints are accessible after startup.</rule>
+        <rule>If tests fail after modernization, first check for compatibility regressions caused by record conversion, enum refactoring, stricter validation, changed null handling, changed parse behavior, changed enum descriptions, or altered helper-method semantics.</rule>
+        <rule>Do not proceed to package or run the application until modernization-induced test regressions are fixed.</rule>
+    </guardrails>
+
+    <recommended-workflow>
+        <step>Verify Java version is 21 or higher using `java -version`</step>
+        <step>Navigate to the modernized-ecommerce-app directory</step>
+        <step>Clean any previous build artifacts: `mvn clean`</step>
+        <step>Compile the application: `mvn compile`</step>
+        <step>Run all tests: `mvn test`</step>
+        <step>If tests fail, analyze whether the failure is due to a modernization compatibility regression before making additional changes</step>
+        <step>Generate coverage report: `mvn jacoco:report`</step>
+        <step>Verify coverage meets threshold (&gt;60% line and branch coverage)</step>
+        <step>Build the application JAR: `mvn package`</step>
+        <step>Run the application: `mvn spring-boot:run`</step>
+        <step>Verify application startup in console logs</step>
+        <step>Use IBM Bob's embedded browser feature to run additional deployment tests if needed</step>
+        <step>Test health endpoint: http://localhost:8080/actuator/health</step>
+        <step>Test API endpoints: http://localhost:8080/api/orders</step>
+        <step>Test Swagger UI: http://localhost:8080/swagger-ui/index.html</step>
+    </recommended-workflow>
+
+    <build-verification>
+        <description>Before marking the deployment as successful, verify all of the following conditions.</description>
+        <check>Maven build completes with BUILD SUCCESS</check>
+        <check>All unit tests pass (0 failures, 0 errors)</check>
+        <check>JaCoCo coverage report shows &gt;60% line coverage</check>
+        <check>JaCoCo coverage report shows &gt;60% branch coverage</check>
+        <check>Application JAR file exists in target/ directory</check>
+        <check>No compilation errors or warnings about deprecated APIs</check>
+        <check>No unresolved modernization compatibility regressions remain</check>
+    </build-verification>
+
+    <runtime-verification>
+        <description>After starting the application with mvn spring-boot:run, verify these conditions.</description>
+        <check>Application starts without exceptions</check>
+        <check>Console shows "Started Application in X seconds"</check>
+        <check>Health endpoint returns {"status":"UP"}</check>
+        <check>API endpoints return valid responses</check>
+        <check>Swagger UI page loads successfully</check>
+        <check>No error messages in console logs</check>
+        <check>Application responds on port 8080</check>
+    </runtime-verification>
+
+    <helper-scripts>
+        <description>
+            The lab provides helper scripts in the scripts/ directory for common tasks.
+            These scripts include error checking and provide clear feedback.
+        </description>
+
+        <script>
+            <name>build.sh</name>
+            <purpose>Build the application with Maven</purpose>
+            <usage>../scripts/build.sh</usage>
+            <checks>
+                <check>Verifies Java 21 is installed</check>
+                <check>Runs mvn clean install</check>
+                <check>Reports build success or failure</check>
+            </checks>
+        </script>
+
+        <script>
+            <name>test.sh</name>
+            <purpose>Run tests and generate coverage report</purpose>
+            <usage>../scripts/test.sh</usage>
+            <checks>
+                <check>Runs mvn clean test jacoco:report</check>
+                <check>Opens coverage report in browser</check>
+                <check>Shows coverage targets (&gt;60%)</check>
+            </checks>
+        </script>
+
+        <script>
+            <name>run.sh</name>
+            <purpose>Start the Spring Boot application</purpose>
+            <usage>../scripts/run.sh</usage>
+            <checks>
+                <check>Verifies Java 21 is installed</check>
+                <check>Runs mvn spring-boot:run</check>
+                <check>Shows application URLs</check>
+            </checks>
+        </script>
+    </helper-scripts>
+
+    <maven-configuration>
+        <description>The pom.xml must be properly configured for Java 21 and Spring Boot 3.x.</description>
+        <required-properties>
+            <property name="java.version">21</property>
+            <property name="spring-boot.version">3.2.0 or higher</property>
+            <property name="maven.compiler.source">21</property>
+            <property name="maven.compiler.target">21</property>
+        </required-properties>
+        <required-plugins>
+            <plugin name="spring-boot-maven-plugin">For running the application</plugin>
+            <plugin name="maven-surefire-plugin">For running tests</plugin>
+            <plugin name="jacoco-maven-plugin">For code coverage</plugin>
+        </required-plugins>
+        <rules>
+            <rule>Never use --enable-preview in compiler arguments</rule>
+            <rule>Never use preview features in source code</rule>
+            <rule>Ensure all dependencies are compatible with Java 21</rule>
+            <rule>Use SpringDoc OpenAPI instead of Springfox for Swagger</rule>
+        </rules>
+    </maven-configuration>
+
+    <port-configuration>
+        <description>The application runs on port 8080 by default. Ensure no port conflicts exist.</description>
+        <default-port>8080</default-port>
+        <configuration-file>src/main/resources/application.properties</configuration-file>
+        <property>server.port=8080</property>
+
+        <pre-deployment-port-check>
+            <description>
+                Before starting the application, check if port 8080 is already in use to prevent
+                startup failures. This is especially important when running multiple Spring Boot
+                applications or after a previous run that didn't shut down cleanly.
+            </description>
+            <check-command>lsof -ti:8080</check-command>
+            <interpretation>
+                - If the command returns a process ID (PID), port 8080 is in use
+                - If the command returns nothing, port 8080 is available
+            </interpretation>
+            <cleanup-if-needed><![CDATA[
+# Check what's using port 8080
+lsof -ti:8080
+
+# If a process is found, kill it (use with caution)
+lsof -ti:8080 | xargs kill -9
+
+# Verify port is now free
+lsof -ti:8080  # Should return nothing
+            ]]></cleanup-if-needed>
+            <alternative-check><![CDATA[
+# Alternative using netstat (if lsof is not available)
+netstat -an | grep 8080
+
+# Alternative using ss command
+ss -tuln | grep 8080
+            ]]></alternative-check>
+        </pre-deployment-port-check>
+
+        <troubleshooting>
+            <issue>
+                <problem>Port 8080 already in use</problem>
+                <symptom>Application fails to start with "Port 8080 is already in use" or "Address already in use"</symptom>
+                <solution>
+                    1. Check what's using the port: lsof -ti:8080
+                    2. Kill the process if safe: lsof -ti:8080 | xargs kill -9
+                    3. Verify port is free: lsof -ti:8080 (should return nothing)
+                    4. Alternative: Change server.port in application.properties to a different port
+                </solution>
+                <prevention>
+                    Always run the pre-deployment port check before starting the application.
+                    Add port cleanup to your deployment scripts.
+                </prevention>
+            </issue>
+        </troubleshooting>
+    </port-configuration>
+
+    <endpoint-verification>
+        <description>
+            After the application starts, verify these endpoints are accessible.
+            Some endpoints may return HTTP redirects (302) which must be followed.
+        </description>
+
+        <endpoint>
+            <url>http://localhost:8080/actuator/health</url>
+            <expected-response>{"status":"UP"}</expected-response>
+            <purpose>Health check endpoint</purpose>
+            <verification-command>curl -s http://localhost:8080/actuator/health</verification-command>
+            <expected-status>200 OK</expected-status>
+        </endpoint>
+
+        <endpoint>
+            <url>http://localhost:8080/api/orders</url>
+            <expected-response>JSON array of orders</expected-response>
+            <purpose>REST API endpoint</purpose>
+            <verification-command>curl -s http://localhost:8080/api/orders</verification-command>
+            <expected-status>200 OK</expected-status>
+        </endpoint>
+
+        <endpoint>
+            <url>http://localhost:8080/swagger-ui/index.html</url>
+            <expected-response>Swagger UI page</expected-response>
+            <purpose>API documentation</purpose>
+            <note>Path changed from /swagger-ui.html (Spring Boot 2.x) to /swagger-ui/index.html (Spring Boot 3.x)</note>
+            <verification-command>curl -L -s -o /dev/null -w "%{http_code}" http://localhost:8080/swagger-ui/index.html</verification-command>
+            <expected-status>200 OK (after following redirects)</expected-status>
+        </endpoint>
+
+        <redirect-handling>
+            <description>Swagger UI endpoints often return HTTP 302 redirects. Always use curl -L to follow redirects.</description>
+            <without-redirect-follow><![CDATA[
+# This will return 302 and not show the actual page
+curl -s http://localhost:8080/swagger-ui/index.html
+# Output: HTTP 302 redirect response
+            ]]></without-redirect-follow>
+            <with-redirect-follow><![CDATA[
+# This follows redirects and returns the actual page (200 OK)
+curl -L -s http://localhost:8080/swagger-ui/index.html
+# Output: Full Swagger UI HTML page
+
+# Check final status code after following redirects
+curl -L -s -o /dev/null -w "%{http_code}" http://localhost:8080/swagger-ui/index.html
+# Output: 200 (if successful)
+            ]]></with-redirect-follow>
+        </redirect-handling>
+
+        <verification-script><![CDATA[
+#!/bin/bash
+# Complete endpoint verification script
+
+echo "Verifying application endpoints..."
+
+# Health check
+echo -n "Health endpoint: "
+HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/actuator/health)
+if [ "$HEALTH_STATUS" = "200" ]; then
+    echo "✓ OK ($HEALTH_STATUS)"
+else
+    echo "✗ FAILED ($HEALTH_STATUS)"
+fi
+
+# API endpoint
+echo -n "API endpoint: "
+API_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/api/orders)
+if [ "$API_STATUS" = "200" ]; then
+    echo "✓ OK ($API_STATUS)"
+else
+    echo "✗ FAILED ($API_STATUS)"
+fi
+
+# Swagger UI (with redirect following)
+echo -n "Swagger UI: "
+SWAGGER_STATUS=$(curl -L -s -o /dev/null -w "%{http_code}" http://localhost:8080/swagger-ui/index.html)
+if [ "$SWAGGER_STATUS" = "200" ]; then
+    echo "✓ OK ($SWAGGER_STATUS)"
+else
+    echo "✗ FAILED ($SWAGGER_STATUS)"
+fi
+        ]]></verification-script>
+    </endpoint-verification>
+
+    <success-criteria>
+        <description>The local deployment is considered successful when ALL of the following are true.</description>
+        <criterion>Code compiles without errors</criterion>
+        <criterion>All tests pass</criterion>
+        <criterion>Test coverage exceeds 60% (line and branch)</criterion>
+        <criterion>Application JAR builds successfully</criterion>
+        <criterion>Application starts without exceptions</criterion>
+        <criterion>Health endpoint returns UP status</criterion>
+        <criterion>API endpoints return valid responses</criterion>
+        <criterion>Swagger UI is accessible</criterion>
+        <criterion>No errors in application logs</criterion>
+        <criterion>No unresolved modernization compatibility regressions remain</criterion>
+    </success-criteria>
+
+    <common-issues>
+        <issue>
+            <problem>Java version mismatch</problem>
+            <symptom>Compilation errors or "class file version" errors</symptom>
+            <solution>Verify Java 21 is active: java -version. Use SDKMAN to switch: sdk use java 21-tem</solution>
+        </issue>
+
+        <issue>
+            <problem>Maven not found</problem>
+            <symptom>Command 'mvn' not found</symptom>
+            <solution>Install Maven with SDKMAN: sdk install maven</solution>
+        </issue>
+
+        <issue>
+            <problem>Tests fail after modernization</problem>
+            <symptom>Test failures, assertion failures, or NullPointerExceptions</symptom>
+            <solution>
+                First determine whether the failure is a modernization compatibility regression.
+                Common causes include record conversion breaking legacy getters or setters,
+                changing enum values or descriptions, changing fromString(String) behavior,
+                adding stricter null validation, or altering boolean helper semantics such as isCompleted().
+                Preserve legacy behavior unless requirements explicitly require change.
+            </solution>
+        </issue>
+
+        <issue>
+            <problem>Application won't start</problem>
+            <symptom>Exceptions during startup</symptom>
+            <solution>Check for Spring Boot 3.x compatibility issues. Verify all dependencies are updated. Check application.properties for deprecated settings.</solution>
+        </issue>
+
+        <issue>
+            <problem>Swagger UI returns 404</problem>
+            <symptom>Cannot access /swagger-ui.html</symptom>
+            <solution>Use the Spring Boot 3.x path: /swagger-ui/index.html. Verify SpringDoc OpenAPI dependency is in pom.xml.</solution>
+        </issue>
+
+        <issue>
+            <problem>Swagger UI returns 302 redirect</problem>
+            <symptom>curl returns redirect response instead of page content</symptom>
+            <solution>Use curl -L to follow redirects: curl -L http://localhost:8080/swagger-ui/index.html. This is normal behavior for Swagger UI.</solution>
+            <explanation>
+                Spring Boot's Swagger UI implementation uses redirects to serve the actual UI page.
+                The initial request to /swagger-ui/index.html returns HTTP 302 with a Location header
+                pointing to the actual UI resource. This is expected behavior, not an error.
+            </explanation>
+        </issue>
+
+        <issue>
+            <problem>Port 8080 conflict after previous run</problem>
+            <symptom>Application fails to start immediately after stopping a previous instance</symptom>
+            <solution>
+                1. Wait 5-10 seconds for the previous process to fully terminate
+                2. Or manually kill the process: lsof -ti:8080 | xargs kill -9
+                3. Verify port is free before restarting: lsof -ti:8080
+            </solution>
+            <prevention>
+                Use Ctrl+C to stop the application gracefully, then wait for "Process finished" message
+                before starting again. Add port checks to your deployment scripts.
+            </prevention>
+        </issue>
+    </common-issues>
+
+    <deployment-summary-template>
+        <description>After successful local deployment, provide this summary to the user.</description>
+        <template><![CDATA[
+✅ Local Deployment Successful!
+
+Build Results:
+- Maven build: SUCCESS
+- Tests passed: [X] tests
+- Test coverage: [Y]% line coverage, [Z]% branch coverage
+- Application JAR: target/[artifact-name].jar
+
+Application Running:
+- Status: Running on http://localhost:8080
+- Health Check: http://localhost:8080/actuator/health
+- API Endpoints: http://localhost:8080/api/orders
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+
+To stop the application: Press Ctrl+C
+
+Next Steps:
+1. Test the API endpoints in your browser or with curl
+2. Explore the Swagger UI for API documentation
+3. Review the coverage report: target/site/jacoco/index.html
+4. Make additional improvements if needed
+        ]]></template>
+    </deployment-summary-template>
+
+    <no-external-dependencies>
+        <description>This local deployment workflow requires NO external services or infrastructure.</description>
+        <not-required>
+            <item>OpenShift cluster</item>
+            <item>Gitea repository</item>
+            <item>MCP servers</item>
+            <item>SonarQube server</item>
+            <item>Nexus repository</item>
+            <item>Container registry</item>
+            <item>Cloud platform</item>
+        </not-required>
+        <only-required>
+            <item>Java 21 (installed locally)</item>
+            <item>Maven (installed locally)</item>
+            <item>Local filesystem</item>
+            <item>Web browser (for testing)</item>
+        </only-required>
+    </no-external-dependencies>
+</local-deployment-guide>

@@ -1,0 +1,56 @@
+{
+  "name": "OrderProcessingFlow",
+  "version": "1.0.0",
+  "description": "ACE Order Processing Integration Flow",
+  "type": "application",
+  "runtime": {
+    "aceVersion": "12.0",
+    "javaVersion": "11"
+  },
+  "dependencies": {
+    "ibm-mq-client": "9.3.0",
+    "json-parser": "2.0"
+  },
+  "messageFlows": [
+    {
+      "name": "MainFlow",
+      "path": "MessageFlows/MainFlow.msgflow",
+      "description": "Main order processing flow - receives HTTP requests, transforms messages, and outputs to MQ"
+    },
+    {
+      "name": "ErrorHandling",
+      "path": "MessageFlows/ErrorHandling.subflow",
+      "description": "Error handling subflow - formats errors, logs them, and routes to error queues"
+    }
+  ],
+  "javaCompute": [
+    {
+      "name": "TransformMessage",
+      "path": "JavaCompute/TransformMessage.java",
+      "package": "com.ibm.ace.orderprocessing",
+      "description": "Java compute node for order message transformation"
+    }
+  ],
+  "queues": {
+    "input": [],
+    "output": [
+      "ORDER.OUTPUT",
+      "ORDER.ERROR",
+      "ORDER.DEADLETTER"
+    ]
+  },
+  "endpoints": {
+    "http": [
+      {
+        "path": "/orders",
+        "method": "POST",
+        "description": "Receive new order requests"
+      }
+    ]
+  },
+  "configuration": {
+    "queueManager": "QM1",
+    "httpPort": 7800,
+    "logLevel": "INFO"
+  }
+}

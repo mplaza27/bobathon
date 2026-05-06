@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <rule id="sonarqube-mcp-001" priority="critical">
+    <title>SonarQube MCP Server Configuration</title>
+    <description>
+      Use the SonarQube MCP server with credentials from environment variables:
+      
+      MCP Server Configuration:
+      - Server Name: sonarqube
+      - URL: ${SONARQUBE_MCP_URL}
+      - Transport: SSE
+      
+      Authentication:
+      - Token: ${SONARQUBE_TOKEN}
+      - Base URL: ${SONARQUBE_BASE_URL}
+      - Note: Credentials are loaded from .env file via environment variables
+      
+      UI Access (for reference):
+      - URL: ${SONARQUBE_BASE_URL}/sessions/new
+      - Username: ${SONARQUBE_USERNAME}
+      - Password: ${SONARQUBE_PASSWORD}
+    </description>
+  </rule>
+
+  <rule id="sonarqube-mcp-002" priority="high">
+    <title>Available MCP Tools</title>
+    <description>
+      Use these SonarQube MCP tools for analysis:
+      
+      1. list_projects
+         - Lists all projects in SonarQube
+         - No parameters required
+         - Returns: project keys, names, and last analysis dates
+      
+      2. get_project_metrics
+         - Retrieves quality metrics for a specific project
+         - Parameters: projectKey (required)
+         - Returns: bugs, vulnerabilities, code_smells, coverage, duplications, etc.
+      
+      3. get_issues
+         - Fetches issues for a project
+         - Parameters: projectKey (required), severities (optional), types (optional)
+         - Returns: list of issues with details
+      
+      4. get_quality_gate_status
+         - Checks if project passes quality gate
+         - Parameters: projectKey (required)
+         - Returns: status (PASSED/FAILED), conditions
+      
+      5. search_issues
+         - Searches for specific issues across projects
+         - Parameters: query filters
+         - Returns: matching issues
+      
+      Always use projectKey when available. For Java Maven projects, 
+      the projectKey is typically defined in pom.xml as:
+      <groupId>:<artifactId>
+    </description>
+  </rule>
+
+  <rule id="sonarqube-mcp-003" priority="high">
+    <title>Error Handling</title>
+    <description>
+      Handle SonarQube MCP errors gracefully:
+      
+      1. 403 Forbidden
+         - Check authentication token
+         - Verify project exists and user has access
+         - Suggest manual verification via UI
+      
+      2. 404 Not Found
+         - Project may not exist in SonarQube
+         - Verify project key is correct
+         - Suggest running initial scan first
+      
+      3. Connection Errors
+         - Check MCP server URL
+         - Verify network connectivity
+         - Suggest alternative analysis methods (mvn sonar:sonar)
+      
+      4. Timeout
+         - Large projects may take time to analyze
+         - Suggest checking SonarQube UI for progress
+         - Retry after waiting
+      
+      Always provide fallback options when MCP tools fail.
+    </description>
+  </rule>
+
+  <rule id="sonarqube-mcp-004" priority="medium">
+    <title>Best Practices for MCP Usage</title>
+    <description>
+      Follow these best practices:
+      
+      1. Always list projects first to verify connectivity
+      2. Use specific project keys rather than searching
+      3. Filter issues by severity to focus on critical items
+      4. Retrieve metrics in batches for large projects
+      5. Cache results to avoid repeated API calls
+      6. Provide context when reporting errors
+      7. Include project key in all error messages
+      8. Suggest manual UI verification for complex issues
+    </description>
+  </rule>
+</rules>
+
+<!-- Made with Bob -->

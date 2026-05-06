@@ -1,0 +1,184 @@
+# IBM MQ Queue Manager Configuration
+# Queue Manager: QM1
+# Version: 1.0
+# Description: Configuration for Order Processing Queue Manager
+
+queueManager:
+  name: QM1
+  description: "Order Processing Queue Manager"
+  
+  # Queue Manager Attributes
+  attributes:
+    deadLetterQueue: ORDER.DEADLETTER
+    maxMessageLength: 4194304  # 4MB
+    maxUncommittedMessages: 10000
+    logPrimaryFiles: 8
+    logSecondaryFiles: 4
+    logFilePages: 16384
+    
+  # Listener Configuration
+  listeners:
+    - name: LISTENER.TCP
+      type: TCP
+      port: 1414
+      ipAddress: "*"
+      control: QMGR
+      
+  # Channel Configuration
+  channels:
+    # Server Connection Channel for ACE
+    - name: ACE.SVRCONN
+      type: SVRCONN
+      description: "Server connection channel for ACE integration"
+      maxMessageLength: 4194304
+      maxInstances: 999999999
+      maxInstancesPerClient: 999999999
+      sharingConversations: 10
+      
+    # Admin Channel
+    - name: ADMIN.SVRCONN
+      type: SVRCONN
+      description: "Administrative server connection channel"
+      maxMessageLength: 4194304
+      
+  # Security Configuration
+  security:
+    # Channel Authentication
+    channelAuth:
+      - channel: ACE.SVRCONN
+        type: BLOCKUSER
+        userList: ["nobody", "guest"]
+        action: BLOCK
+        
+      - channel: ACE.SVRCONN
+        type: ADDRESSMAP
+        address: "*"
+        userSource: CHANNEL
+        action: ALLOW
+        
+    # Connection Authentication
+    connAuth:
+      enabled: false  # Set to true in production
+      type: IDPWOS
+      
+  # Logging Configuration
+  logging:
+    errorLogSize: 262144  # 256MB
+    
+  # Performance Tuning
+  performance:
+    # Shared Queue Settings
+    sharedQueueQmgrName: QM1
+    
+    # Thread Settings
+    maxChannels: 200
+    maxActiveChannels: 100
+    
+    # Memory Settings
+    defaultQBufferSize: 262144
+    
+# Application Configuration
+application:
+  name: OrderProcessing
+  version: "1.0.0"
+  
+  # Queue Mappings
+  queues:
+    output: ORDER.OUTPUT
+    error: ORDER.ERROR
+    deadLetter: ORDER.DEADLETTER
+    backout: ORDER.BACKOUT
+    
+  # Connection Settings
+  connection:
+    queueManager: QM1
+    channel: ACE.SVRCONN
+    host: localhost
+    port: 1414
+    timeout: 30
+    
+  # Message Settings
+  message:
+    persistence: PERSISTENT
+    priority: 5
+    expiry: 3600  # 1 hour in seconds
+    format: MQSTR
+    
+  # Error Handling
+  errorHandling:
+    maxRetries: 3
+    retryInterval: 5  # seconds
+    backoutThreshold: 3
+    backoutQueue: ORDER.BACKOUT
+    
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  
+  # Queue Depth Monitoring
+  queueDepth:
+    warningThreshold: 80  # percentage
+    criticalThreshold: 95  # percentage
+    checkInterval: 60  # seconds
+    
+  # Channel Monitoring
+  channels:
+    checkInterval: 30  # seconds
+    
+  # Performance Metrics
+  metrics:
+    enabled: true
+    interval: 60  # seconds
+    retention: 7  # days
+    
+# High Availability Configuration (optional)
+highAvailability:
+  enabled: false
+  
+  # Multi-Instance Configuration
+  multiInstance:
+    enabled: false
+    dataPath: /var/mqm/qmgrs/QM1/data
+    logPath: /var/mqm/qmgrs/QM1/log
+    
+  # Disaster Recovery
+  disasterRecovery:
+    enabled: false
+    replicationQueueManager: QM1_DR
+    
+# Backup Configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: 7  # days
+  location: /backup/mq/QM1
+  
+# Environment-Specific Overrides
+environments:
+  development:
+    queueManager:
+      attributes:
+        maxMessageLength: 1048576  # 1MB for dev
+    monitoring:
+      enabled: false
+      
+  test:
+    queueManager:
+      attributes:
+        maxMessageLength: 2097152  # 2MB for test
+    monitoring:
+      enabled: true
+      
+  production:
+    queueManager:
+      attributes:
+        maxMessageLength: 4194304  # 4MB for prod
+    security:
+      connAuth:
+        enabled: true
+    monitoring:
+      enabled: true
+    highAvailability:
+      enabled: true
+
+# Made with Bob

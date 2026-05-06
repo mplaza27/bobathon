@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <rule id="sonarqube-workflow-001" priority="critical">
+    <title>SonarQube Analysis Workflow</title>
+    <description>
+      Follow this workflow when performing SonarQube analysis:
+      
+      1. PROJECT IDENTIFICATION
+         - Identify the project directory and language
+         - Determine project key (usually from pom.xml, package.json, etc.)
+         - Check if project has existing SonarQube configuration
+      
+      2. PRE-ANALYSIS CHECKS
+         - Ensure project builds successfully
+         - Verify tests are passing
+         - Check if code coverage reports exist
+      
+      3. RUN SONARQUBE SCAN
+         - Use SonarQube MCP server to trigger analysis
+         - Provide project key and source directory
+         - Wait for analysis to complete
+      
+      4. RETRIEVE RESULTS
+         - Fetch quality gate status
+         - Get metrics: bugs, vulnerabilities, code smells, security hotspots
+         - Retrieve coverage and duplication data
+      
+      5. ANALYZE FINDINGS
+         - Categorize issues by severity (BLOCKER, CRITICAL, MAJOR, MINOR, INFO)
+         - Identify critical security vulnerabilities
+         - Review code smells and technical debt
+      
+      6. GENERATE REPORT
+         - Create comprehensive quality report
+         - Include metrics summary
+         - List top issues with remediation suggestions
+         - Provide quality gate status
+      
+      7. PROVIDE RECOMMENDATIONS
+         - Prioritize fixes by severity and impact
+         - Suggest code improvements
+         - Recommend best practices
+    </description>
+  </rule>
+
+  <rule id="sonarqube-workflow-002" priority="high">
+    <title>Quality Metrics Priority</title>
+    <description>
+      Analyze and report metrics in this priority order:
+      
+      1. SECURITY (Highest Priority)
+         - Security vulnerabilities (CRITICAL, HIGH)
+         - Security hotspots requiring review
+         - Security rating (A-E)
+      
+      2. RELIABILITY
+         - Bugs (BLOCKER, CRITICAL, MAJOR)
+         - Reliability rating (A-E)
+         - Error-prone code patterns
+      
+      3. MAINTAINABILITY
+         - Code smells (MAJOR, MINOR)
+         - Technical debt ratio
+         - Maintainability rating (A-E)
+      
+      4. COVERAGE
+         - Line coverage percentage
+         - Branch coverage percentage
+         - Uncovered lines and conditions
+      
+      5. DUPLICATIONS
+         - Duplicated lines percentage
+         - Duplicated blocks count
+         - Duplicated files
+    </description>
+  </rule>
+
+  <rule id="sonarqube-workflow-003" priority="high">
+    <title>Report Format Standards</title>
+    <description>
+      Generate reports in this format:
+      
+      ## SonarQube Quality Analysis Report
+      
+      ### Executive Summary
+      - Quality Gate: PASSED/FAILED
+      - Overall Rating: A/B/C/D/E
+      - Critical Issues: X
+      - Total Issues: Y
+      
+      ### Key Metrics
+      | Metric | Value | Rating |
+      |--------|-------|--------|
+      | Bugs | X | A-E |
+      | Vulnerabilities | X | A-E |
+      | Code Smells | X | A-E |
+      | Coverage | X% | - |
+      | Duplications | X% | - |
+      | Technical Debt | Xd | - |
+      
+      ### Critical Issues (BLOCKER/CRITICAL)
+      1. [Issue Type] Issue description
+         - File: path/to/file.java:line
+         - Severity: BLOCKER/CRITICAL
+         - Remediation: How to fix
+      
+      ### Recommendations
+      - Prioritized list of actions
+      - Best practices to follow
+      - Areas needing immediate attention
+    </description>
+  </rule>
+</rules>
+
+<!-- Made with Bob -->

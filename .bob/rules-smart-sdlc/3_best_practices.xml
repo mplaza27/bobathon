@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<development-best-practices>
+    <overview>
+        Best practices for implementing features and modernizing Java applications
+        in the Smart SDLC workflow. These guidelines ensure high-quality, maintainable,
+        and secure code that meets enterprise standards.
+    </overview>
+
+    <general-principles>
+        <principle priority="high">
+            <name>Understand Before Implementing</name>
+            <description>
+                Always fully understand the requirements and existing codebase before
+                making changes. Read the Jira story carefully, examine related code,
+                and clarify ambiguities.
+            </description>
+            <rationale>
+                Rushing into implementation without understanding leads to incorrect
+                solutions, rework, and technical debt.
+            </rationale>
+        </principle>
+
+        <principle priority="high">
+            <name>Follow Existing Patterns</name>
+            <description>
+                Maintain consistency with existing code patterns, naming conventions,
+                and architectural decisions unless there's a compelling reason to change.
+            </description>
+            <rationale>
+                Consistency makes code easier to understand, maintain, and review.
+                Mixing patterns creates confusion and maintenance burden.
+            </rationale>
+        </principle>
+
+        <principle priority="high">
+            <name>Test-Driven Approach</name>
+            <description>
+                Write tests alongside or before implementation. Ensure all new code
+                has appropriate test coverage.
+            </description>
+            <rationale>
+                Tests catch bugs early, document expected behavior, and enable
+                confident refactoring.
+            </rationale>
+        </principle>
+
+        <principle priority="high">
+            <name>Preserve Existing Public Behavior During Modernization</name>
+            <description>
+                For Java modernization tasks, preserve the observable behavior of
+                existing public APIs unless the Jira story or user explicitly requires
+                a behavior change.
+            </description>
+            <rationale>
+                Modernization is primarily a compatibility and maintainability exercise.
+                Changing public behavior during modernization causes avoidable regressions,
+                especially in existing unit tests and downstream callers.
+            </rationale>
+            <rules>
+                <rule>Observable behavior includes thrown exception types, null handling, return values, boolean helper semantics, enum values, enum descriptions, parse behavior, getter names, and repository/service method contracts.</rule>
+                <rule>Before changing model, repository, enum, or utility code, inspect the existing tests and preserve their expectations exactly.</rule>
+                <rule>Do not "improve" behavior during modernization by adding stricter validation, changing fallback behavior, renaming descriptions, or altering helper method semantics unless requirements explicitly call for it.</rule>
+                <rule>If a behavior change is explicitly required, update or add tests in the same change and document the reason in code comments and Jira.</rule>
+                <rule>For modernization-only tasks, compatibility with existing tests takes precedence over stylistic refactoring.</rule>
+            </rules>
+        </principle>
+
+        <principle priority="medium">
+            <name>Incremental Changes</name>
+            <description>
+                Make small, focused changes rather than large, sweeping modifications.
+                Commit frequently with clear messages.
+            </description>
+            <rationale>
+                Small changes are easier to review, test, and debug. They reduce
+                risk and make it easier to identify issues.
+            </rationale>
+        </principle>
+
+        <principle priority="medium">
+            <name>Document Decisions</name>
+            <description>
+                Document important technical decisions, trade-offs, and non-obvious
+                implementation choices in code comments and Jira.
+            </description>
+            <rationale>
+                Future developers (including yourself) need context to understand
+                why code was written a certain way.
+            </rationale>
+        </principle>
+    </general-principles>
+
+    <java-coding-standards>
+        <naming-conventions>
+            <convention type="classes">
+                <rule>Use PascalCase for class names</rule>
+                <rule>Use nouns or noun phrases</rule>
+                <rule>Be descriptive and specific</rule>
+                <good>PaymentProcessor, OrderService, CustomerRepository</good>
+                <bad>Process, Service, Data, Manager</bad>
+            </convention>
+
+            <convention type="methods">
+                <rule>Use camelCase for method names</rule>
+                <rule>Start with verbs for actions</rule>
+                <rule>Use is/has/can for boolean methods</rule>
+                <good>processPayment(), isValid(), hasPermission()</good>
+                <bad>payment(), valid(), permission()</bad>
+            </convention>
+
+            <convention type="variables">
+                <rule>Use camelCase for variable names</rule>
+                <rule>Use descriptive names, avoid abbreviations</rule>
+                <rule>Use UPPER_CASE for constants</rule>
+                <good>customerEmail, orderTotal, MAX_RETRY_ATTEMPTS</good>
+                <bad>e, tot, max</bad>
+            </convention>
+
+            <convention type="packages">
+                <rule>Use lowercase, dot-separated names</rule>
+                <rule>Follow reverse domain name convention</rule>
+                <rule>Organize by feature or layer</rule>
+                <good>com.example.ecommerce.payment, com.example.ecommerce.order</good>
+                <bad>com.example.Utils, com.example.Stuff</bad>
+            </convention>
+        </naming-conventions>
+
+        <code-organization>
+            <guideline title="Single Responsibility Principle">
+                <description>Each class should have one clear responsibility</description>
+                <example>
+                    Separate OrderService (business logic) from OrderRepository (data access)
+                    from OrderController (HTTP handling)
+                </example>
+            </guideline>
+
+            <guideline title="Dependency Injection">
+                <description>Use constructor injection for required dependencies</description>
+                <example><![CDATA[
+@Service
+public class OrderService {
+    private final OrderRepository orderRepository;
+    private final PaymentService paymentService;
+
+    @Autowired
+    public OrderService(OrderRepository orderRepository,
+                       PaymentService paymentService) {
+        this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
+    }
+}
+                ]]></example>
+            </guideline>
+
+            <guideline title="Package Structure">
+                <description>Organize code by feature or domain, not by layer</description>
+                <preferred><![CDATA[
+com.example.ecommerce/
+  ├── order/
+  │   ├── Order.java
+  │   ├── OrderService.java
+  │   ├── OrderRepository.java
+  │   └── OrderController.java
+  ├── payment/
+  │   ├── Payment.java
+  │   ├── PaymentService.java
+  │   └── PaymentController.java
+                ]]></preferred>
+                <avoid><![CDATA[
+com.example.ecommerce/
+  ├── controller/
+  ├── service/
+  ├── repository/
+  └── model/
+                ]]></avoid>
+            </guideline>
+        </code-organization>
+
+        <error-handling>
+            <guideline title="Use Specific Exceptions">
+                <description>Create custom exceptions for domain-specific errors</description>
+                <example><![CDATA[
+public class PaymentFailedException extends RuntimeException {
+    private final String paymentId;
+    private final String reason;
+
+    public PaymentFailedException(String paymentId, String reason) {
+        super(String.format("Payment %s failed: %s", paymentId, reason));
+        this.paymentId = paymentId;
+        this.reason = reason;
+    }
+}
+                ]]></example>
+            </guideline>
+
+            <guideline title="Don't Swallow Exceptions">
+                <description>Always handle or propagate exceptions appropriately</description>
+                <bad><![CDATA[
+try {
+    processPayment();
+} catch (Exception e) {
+    // Silent failure - BAD!
+}
+                ]]></bad>
+                <good><![CDATA[
+try {
+    processPayment();
+} catch (PaymentException e) {
+    logger.error("Payment processing failed", e);
+    throw new PaymentFailedException(paymentId, e.getMessage());
+}
+                ]]></good>
+            </guideline>
+
+            <guideline title="Validate Input Early">
+                <description>
+                    Validate method parameters at the start of methods for new feature code,
+                    service-layer orchestration, and externally facing APIs.
+                </description>
+                <important>
+                    For modernization tasks, do not add new validation to existing public
+                    model, repository, enum, or utility APIs unless the original behavior
+                    already required it or the Jira story explicitly calls for it.
+                    Preserving existing behavior is more important than introducing stricter checks.
+                </important>
+                <example><![CDATA[
+public void processOrder(Order order) {
+    Objects.requireNonNull(order, "Order cannot be null");
+    if (order.getItems().isEmpty()) {
+        throw new IllegalArgumentException("Order must contain items");
+    }
+    // Process order...
+}
+                ]]></example>
+            </guideline>
+
+            <guideline title="Preserve Legacy Exception Contracts">
+                <description>
+                    If an existing method historically throws a specific exception type
+                    for invalid input, keep that exception type and behavior unless a
+                    requirements change explicitly approves a contract change.
+                </description>
+                <rules>
+                    <rule>Do not replace exception-throwing parse methods with null-returning or default-returning implementations.</rule>
+                    <rule>Do not silently normalize null, blank, or invalid values if the legacy implementation threw IllegalArgumentException.</rule>
+                    <rule>Do not change repository null-handling semantics during modernization unless tests and requirements are updated together.</rule>
+                </rules>
+            </guideline>
+        </error-handling>
+
+        <logging>
+            <guideline title="Use Appropriate Log Levels">
+                <levels>
+                    <level name="ERROR">Errors that need immediate attention</level>
+                    <level name="WARN">Potential issues or unexpected situations</level>
+                    <level name="INFO">Important business events</level>
+                    <level name="DEBUG">Detailed diagnostic information</level>
+                    <level name="TRACE">Very detailed diagnostic information</level>
+                </levels>
+            </guideline>
+
+            <guideline title="Log Meaningful Information">
+                <description>Include context that helps diagnose issues</description>
+                <good><![CDATA[
+logger.info("Processing order {} for customer {}", orderId, customerId);
+logger.error("Payment failed for order {}: {}", orderId, errorMessage);
+                ]]></good>
+                <bad><![CDATA[
+logger.info("Processing order");
+logger.error("Error occurred");
+                ]]></bad>
+            </guideline>
+
+            <guideline title="Don't Log Sensitive Data">
+                <description>Never log passwords, credit cards, or PII</description>
+                <avoid>
+                    <item>Passwords or API keys</item>
+                    <item>Credit card numbers</item>
+                    <item>Social security numbers</item>
+                    <item>Personal health information</item>
+                </avoid>
+            </guideline>
+        </logging>
+    </java-coding-standards>
+
+    <spring-boot-best-practices>
+        <practice title="Use Spring Annotations Appropriately">
+            <guidelines>
+                <guideline>@Service for business logic</guideline>
+                <guideline>@Repository for data access</guideline>
+                <guideline>@Controller/@RestController for HTTP endpoints</guideline>
+                <guideline>@Component for general Spring-managed beans</guideline>
+            </guidelines>
+        </practice>
+
+        <practice title="Externalize Configuration">
+            <description>Use application.properties or application.yml for configuration</description>
+            <example><![CDATA[
+# application.properties
+payment.api.url=https://api.payment.com
+payment.api.timeout=5000
+payment.retry.max-attempts=3
+            ]]></example>
+            <usage><![CDATA[
+@Value("${payment.api.url}")
+private String paymentApiUrl;
+
+@Value("${payment.retry.max-attempts}")
+private int maxRetryAttempts;
+            ]]></usage>
+        </practice>
+
+        <practice title="Use DTOs for API Contracts">
+            <description>Separate domain models from API representations</description>
+            <rationale>
+                Prevents exposing internal structure, allows API evolution,
+                and provides clear API contracts
+            </rationale>
+            <example><![CDATA[
+// Domain model
+@Entity
+public class Order {
+    @Id
+    private Long id;
+    private Customer customer;
+    private List<OrderItem> items;
+    // Internal fields...
+}
+
+// API DTO
+public class OrderResponse {
+    private Long orderId;
+    private String customerName;
+    private List<OrderItemDto> items;
+    private BigDecimal total;
+    // Only fields needed by API consumers
+}
+            ]]></example>
+        </practice>
+
+        <practice title="Implement Proper REST API Design">
+            <guidelines>
+                <guideline>Use appropriate HTTP methods (GET, POST, PUT, DELETE)</guideline>
+                <guideline>Use plural nouns for resource names (/orders, /customers)</guideline>
+                <guideline>Use HTTP status codes correctly (200, 201, 400, 404, 500)</guideline>
+                <guideline>Version your APIs (/api/v1/orders)</guideline>
+                <guideline>Implement proper error responses</guideline>
+            </guidelines>
+        </practice>
+
+        <practice title="Use Transactions Appropriately">
+            <description>Mark service methods with @Transactional when needed</description>
+            <example><![CDATA[
+@Service
+public class OrderService {
+    @Transactional
+    public Order createOrder(OrderRequest request) {
+        Order order = orderRepository.save(new Order(request));
+        paymentService.processPayment(order);
+        inventoryService.reserveItems(order.getItems());
+        return order;
+    }
+}
+            ]]></example>
+        </practice>
+    </spring-boot-best-practices>
+
+    <testing-best-practices>
+        <practice title="Write Unit Tests for Business Logic">
+            <description>Test service layer methods with mocked dependencies</description>
+            <example><![CDATA[
+@ExtendWith(MockitoExtension.class)
+class OrderServiceTest {
+    @Mock
+    private OrderRepository orderRepository;
+
+    @Mock
+    private PaymentService paymentService;
+
+    @InjectMocks
+    private OrderService orderService;
+
+    @Test
+    void shouldCreateOrderSuccessfully() {
+        // Given
+        OrderRequest request = new OrderRequest();
+        Order expectedOrder = new Order();
+        when(orderRepository.save(any())).thenReturn(expectedOrder);
+
+        // When
+        Order result = orderService.createOrder(request);
+
+        // Then
+        assertNotNull(result);
+        verify(paymentService).processPayment(expectedOrder);
+    }
+}
+            ]]></example>
+        </practice>
+
+        <practice title="Test Edge Cases and Error Conditions">
+            <description>Don't just test the happy path</description>
+            <test-scenarios>
+                <scenario>Null or invalid inputs</scenario>
+                <scenario>Empty collections</scenario>
+                <scenario>Boundary values</scenario>
+                <scenario>Exception handling</scenario>
+                <scenario>Concurrent access</scenario>
+            </test-scenarios>
+        </practice>
+
+        <practice title="Use Descriptive Test Names">
+            <description>Test names should describe what is being tested and expected outcome</description>
+            <good>
+                <test>shouldThrowExceptionWhenOrderIsNull()</test>
+                <test>shouldCalculateTotalCorrectlyWithMultipleItems()</test>
+                <test>shouldRetryPaymentOnTransientFailure()</test>
+            </good>
+            <bad>
+                <test>test1()</test>
+                <test>testOrder()</test>
+                <test>testPayment()</test>
+            </bad>
+        </practice>
+
+        <practice title="Follow AAA Pattern">
+            <description>Structure tests with Arrange, Act, Assert sections</description>
+            <example><![CDATA[
+@Test
+void shouldProcessRefundSuccessfully() {
+    // Arrange (Given)
+    Order order = createTestOrder();
+    when(paymentService.refund(any())).thenReturn(true);
+
+    // Act (When)
+    RefundResult result = orderService.processRefund(order.getId());
+
+    // Assert (Then)
+    assertTrue(result.isSuccessful());
+    assertEquals(RefundStatus.COMPLETED, result.getStatus());
+    verify(paymentService).refund(order.getPaymentId());
+}
+            ]]></example>
+        </practice>
+
+        <practice title="Maintain Test Independence">
+            <description>Each test should be independent and not rely on other tests</description>
+            <guidelines>
+                <guideline>Don't share mutable state between tests</guideline>
+                <guideline>Use @BeforeEach for test setup</guideline>
+                <guideline>Clean up resources in @AfterEach if needed</guideline>
+                <guideline>Tests should pass in any order</guideline>
+            </guidelines>
+        </practice>
+
+        <practice title="Use Existing Tests as the Compatibility Oracle During Modernization">
+            <description>
+                When modernizing legacy code, existing tests define the current contract
+                unless the requirements explicitly call for a behavior change.
+            </description>
+            <rules>
+                <rule>Before changing a domain model, enum, repository, or parser, read its existing tests first.</rule>
+                <rule>If tests assert exact exception type, message, enum description, or boolean helper behavior, preserve those expectations exactly.</rule>
+                <rule>If modernization intentionally changes behavior, update tests in the same commit and document why.</rule>
+                <rule>Do not classify compatibility regressions as "just test failures" and move on.</rule>
+            </rules>
+        </practice>
+    </testing-best-practices>
+
+    <security-best-practices>
+        <practice title="Never Hardcode Credentials">
+            <description>Use environment variables or secure configuration management</description>
+            <bad><![CDATA[
+String apiKey = "sk_live_abc123xyz"; // BAD!
+String password = "admin123"; // BAD!
+            ]]></bad>
+            <good><![CDATA[
+@Value("${api.key}")
+private String apiKey;
+
+// Or use environment variables
+String password = System.getenv("DB_PASSWORD");
+            ]]></good>
+        </practice>
+
+        <practice title="Validate and Sanitize Input">
+            <description>Never trust user input, always validate and sanitize</description>
+            <example><![CDATA[
+@PostMapping("/orders")
+public ResponseEntity<Order> createOrder(@Valid @RequestBody OrderRequest request) {
+    // @Valid triggers validation
+    // Additional business validation
+    if (request.getTotal().compareTo(BigDecimal.ZERO) <= 0) {
+        throw new InvalidOrderException("Order total must be positive");
+    }
+    return ResponseEntity.ok(orderService.createOrder(request));
+}
+            ]]></example>
+        </practice>
+
+        <practice title="Use Parameterized Queries">
+            <description>Prevent SQL injection by using prepared statements</description>
+            <bad><![CDATA[
+// SQL Injection vulnerability!
+String query = "SELECT * FROM users WHERE email = '" + email + "'";
+            ]]></bad>
+            <good><![CDATA[
+// Safe with JPA
+@Query("SELECT u FROM User u WHERE u.email = :email")
+User findByEmail(@Param("email") String email);
+
+// Or with JDBC
+PreparedStatement stmt = conn.prepareStatement(
+    "SELECT * FROM users WHERE email = ?");
+stmt.setString(1, email);
+            ]]></good>
+        </practice>
+
+        <practice title="Implement Proper Authentication and Authorization">
+            <description>Use Spring Security for authentication and authorization</description>
+            <example><![CDATA[
+@RestController
+@RequestMapping("/api/orders")
+public class OrderController {
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public Order getOrder(@PathVariable Long id) {
+        return orderService.getOrder(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+    }
+}
+            ]]></example>
+        </practice>
+
+        <practice title="Handle Sensitive Data Carefully">
+            <description>Encrypt sensitive data and minimize exposure</description>
+            <guidelines>
+                <guideline>Encrypt sensitive data at rest and in transit</guideline>
+                <guideline>Use HTTPS for all API communications</guideline>
+                <guideline>Don't log sensitive information</guideline>
+                <guideline>Mask sensitive data in responses</guideline>
+                <guideline>Implement proper data retention policies</guideline>
+            </guidelines>
+        </practice>
+    </security-best-practices>
+
+    <modernization-guidelines>
+        <guideline title="Upgrade Java Version Incrementally">
+            <description>When modernizing from Java 8 to newer versions</description>
+            <steps>
+                <step>Update pom.xml with target Java version</step>
+                <step>Replace deprecated APIs with modern alternatives</step>
+                <step>Adopt new language features where beneficial</step>
+                <step>Update dependencies to compatible versions</step>
+                <step>Run all tests to ensure compatibility</step>
+            </steps>
+            <java-features-to-adopt>
+                <feature version="10">var keyword for local variables</feature>
+                <feature version="11">String methods (isBlank, lines, strip)</feature>
+                <feature version="14">Switch expressions (GA)</feature>
+                <feature version="15">Text blocks (GA)</feature>
+                <feature version="16">Records for immutable data classes (GA)</feature>
+                <feature version="17">Sealed classes for domain modeling (GA)</feature>
+                <feature version="21">Pattern matching for switch (GA)</feature>
+                <feature version="21">Record patterns (GA)</feature>
+                <feature version="21">Sequenced collections (GA)</feature>
+                <feature version="21">Virtual threads via Thread.ofVirtual() (GA)</feature>
+            </java-features-to-adopt>
+        </guideline>
+
+        <guideline title="Never Use Preview Features">
+            <description>
+                Preview features are experimental, subject to change, and will cause the application
+                to fail to start in a standard JVM that does not have --enable-preview enabled.
+                Never use preview features in any part of the modernized application.
+            </description>
+            <forbidden-in-java-code>
+                <feature>String Templates (JEP 430) — preview in Java 21, use String.format() or formatted() instead</feature>
+                <feature>Unnamed Classes and Instance Main Methods (JEP 445) — preview in Java 21</feature>
+                <feature>Unnamed Patterns and Variables (JEP 443) — preview in Java 21, use named variables</feature>
+                <feature>Scoped Values (JEP 446) — preview in Java 21, use ThreadLocal instead</feature>
+                <feature>Structured Concurrency (JEP 453) — preview in Java 21</feature>
+                <feature>Any API annotated with @PreviewFeature</feature>
+            </forbidden-in-java-code>
+            <forbidden-in-pom-xml>
+                <item>Do NOT add --enable-preview to maven-compiler-plugin compilerArgs</item>
+                <item>Do NOT add --enable-preview to maven-surefire-plugin argLine</item>
+                <item><![CDATA[Example of what NOT to do:
+<compilerArgs><arg>--enable-preview</arg></compilerArgs>]]></item>
+            </forbidden-in-pom-xml>
+            <forbidden-in-dockerfile>
+                <item>Do NOT add --enable-preview to the java command in CMD or ENTRYPOINT</item>
+                <item><![CDATA[Example of what NOT to do: CMD ["java", "--enable-preview", "-jar", "app.jar"]]]></item>
+            </forbidden-in-dockerfile>
+            <verification-checklist>
+                <check>Search pom.xml for the string "enable-preview" — must not be present</check>
+                <check>Search Dockerfile for the string "enable-preview" — must not be present</check>
+                <check>Verify mvn clean package succeeds WITHOUT --enable-preview in any configuration</check>
+                <check>Verify the application starts with a plain: java -jar app.jar</check>
+            </verification-checklist>
+        </guideline>
+
+        <guideline title="Refactor Legacy Code Gradually">
+            <description>Don't try to modernize everything at once</description>
+            <approach>
+                <step>Identify high-value areas for modernization</step>
+                <step>Add tests for existing functionality</step>
+                <step>Refactor in small, testable increments</step>
+                <step>Maintain backward compatibility when possible</step>
+                <step>Document changes and migration path</step>
+            </approach>
+        </guideline>
+
+        <guideline title="Adopt Modern Spring Boot Practices">
+            <description>Update to current Spring Boot patterns</description>
+            <updates>
+                <update>Use constructor injection instead of field injection</update>
+                <update>Replace XML configuration with Java config</update>
+                <update>Use @SpringBootApplication instead of multiple annotations</update>
+                <update>Adopt Spring Boot 3.x features if upgrading</update>
+                <update>Use WebFlux for reactive applications if appropriate</update>
+            </updates>
+        </guideline>
+
+        <guideline title="Spring Boot 3.x Swagger / OpenAPI UI Path">
+            <description>
+                Springfox is incompatible with Spring Boot 3.x and must not be used.
+                Use SpringDoc OpenAPI (springdoc-openapi-starter-webmvc-ui) instead.
+                The Swagger UI path changed between Spring Boot 2.x and 3.x.
+            </description>
+            <mapping>
+                <entry>
+                    <version>Spring Boot 2.x (Springfox)</version>
+                    <dependency>springfox-boot-starter</dependency>
+                    <url>/swagger-ui.html</url>
+                </entry>
+                <entry>
+                    <version>Spring Boot 3.x (SpringDoc)</version>
+                    <dependency>springdoc-openapi-starter-webmvc-ui</dependency>
+                    <url>/swagger-ui/index.html</url>
+                </entry>
+            </mapping>
+            <rules>
+                <rule>Always use springdoc-openapi-starter-webmvc-ui in pom.xml for Spring Boot 3.x. Never use springfox.</rule>
+                <rule>Always report the Swagger UI as: &lt;route-url&gt;/swagger-ui/index.html — never /swagger-ui.html.</rule>
+                <rule>When updating the Jira ticket or posting deployment results in chat, include the correct Swagger UI URL.</rule>
+            </rules>
+            <pom-dependency><![CDATA[
+<dependency>
+  <groupId>org.springdoc</groupId>
+  <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+  <version>2.3.0</version>
+</dependency>
+            ]]></pom-dependency>
+        </guideline>
+    </modernization-guidelines>
+
+    <code-review-checklist>
+        <category name="Functionality">
+            <item>Code meets all acceptance criteria</item>
+            <item>Edge cases are handled</item>
+            <item>Error handling is appropriate</item>
+            <item>No obvious bugs or logic errors</item>
+        </category>
+
+        <category name="Code Quality">
+            <item>Code is readable and well-organized</item>
+            <item>Naming is clear and consistent</item>
+            <item>No code duplication</item>
+            <item>Methods are focused and not too long</item>
+            <item>Comments explain why, not what</item>
+        </category>
+
+        <category name="Testing">
+            <item>Unit tests cover new functionality</item>
+            <item>Tests are meaningful and not just for coverage</item>
+            <item>Edge cases are tested</item>
+            <item>All tests pass</item>
+            <item>For modernization, existing tests are treated as compatibility requirements unless explicitly superseded by new requirements.</item>
+        </category>
+
+        <category name="Security">
+            <item>No hardcoded credentials</item>
+            <item>Input is validated</item>
+            <item>SQL injection is prevented</item>
+            <item>Sensitive data is protected</item>
+        </category>
+
+        <category name="Performance">
+            <item>No obvious performance issues</item>
+            <item>Database queries are efficient</item>
+            <item>Resources are properly closed</item>
+            <item>Caching is used appropriately</item>
+        </category>
+
+        <category name="Documentation">
+            <item>Public APIs are documented</item>
+            <item>Complex logic is explained</item>
+            <item>README is updated if needed</item>
+            <item>Jira issue is updated</item>
+        </category>
+    </code-review-checklist>
+
+    <maven-execution>
+        <rule>
+            Always use the system `mvn` command, never `./mvnw`. The Maven wrapper script
+            requires execute permissions that may not be set, and the system Maven (installed via
+            SDKMAN or package manager) is always available in this lab environment.
+        </rule>
+        <rule>Do not attempt to chmod or fix ./mvnw permissions. Use `mvn` directly.</rule>
+    </maven-execution>
+
+    <jacoco-coverage>
+        <rule>
+            Always add the JaCoCo Maven plugin to the modernized pom.xml. Without it,
+            coverage reports cannot be generated and the coverage comparison step of the workflow
+            will fail.
+        </rule>
+        <required-pom-config><![CDATA[
+<plugin>
+  <groupId>org.jacoco</groupId>
+  <artifactId>jacoco-maven-plugin</artifactId>
+  <version>0.8.11</version>
+  <executions>
+    <execution>
+      <id>prepare-agent</id>
+      <goals><goal>prepare-agent</goal></goals>
+    </execution>
+    <execution>
+      <id>report</id>
+      <phase>test</phase>
+      <goals><goal>report</goal></goals>
+    </execution>
+  </executions>
+</plugin>
+        ]]></required-pom-config>
+        <rule>
+            Include this plugin in the modernized pom.xml when generating the project
+            structure — do not wait for the coverage step to discover it is missing.
+        </rule>
+    </jacoco-coverage>
+
+    <maven-surefire-java21>
+        <rule>
+            When modernizing to Java 21, the Maven Surefire plugin must be explicitly configured
+            with the Java 21 executable path. Without this configuration, tests will fail with
+            "UnsupportedClassVersionError" or similar errors even if JAVA_HOME is set correctly.
+        </rule>
+        <required-pom-config><![CDATA[
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-surefire-plugin</artifactId>
+  <version>3.2.5</version>
+  <configuration>
+    <jvm>${env.JAVA_HOME}/bin/java</jvm>
+    <argLine>-Xmx1024m</argLine>
+  </configuration>
+</plugin>
+        ]]></required-pom-config>
+        <rule>
+            Include this plugin configuration in the modernized pom.xml when generating the project
+            structure — do not wait for test failures to discover it is missing.
+        </rule>
+        <rule>
+            The jvm parameter must point to ${env.JAVA_HOME}/bin/java to ensure tests run with
+            Java 21, not an older version that might be in the system PATH.
+        </rule>
+        <verification>
+            After adding this configuration, run `mvn clean test` to verify all tests
+            pass with Java 21. If tests still fail, verify JAVA_HOME is set: `echo $JAVA_HOME`
+        </verification>
+    </maven-surefire-java21>
+
+    <java21-record-test-compatibility>
+        <rule>
+            When modernizing domain model classes to Java 21 records, the existing tests
+            were written against the original class API. Maintain backward compatibility so
+            all existing tests continue to pass without modification.
+        </rule>
+        <guideline>Add legacy getter methods (getId(), getName(), etc.) alongside record accessor methods (id(), name()). Records do not generate getXxx() methods — add them explicitly.</guideline>
+        <guideline>Do NOT add validation logic inside record compact constructors. Move validation to the service layer. Record constructors with validation break tests that intentionally create invalid objects for negative test cases.</guideline>
+        <guideline>Do NOT convert request/command objects (e.g. CreateOrderRequest) to records if the existing tests use no-arg constructors and setters. Only convert truly immutable domain objects (e.g. Product, OrderItem) to records.</guideline>
+        <guideline>Do NOT add or remove enum values to match a "more complete" model. If the legacy tests assert on a specific set of enum values, preserve that set exactly.</guideline>
+        <guideline>Preserve enum metadata exactly, including descriptions, labels, getDescription(), toString(), and any text rendered to UI or asserted in tests.</guideline>
+        <guideline>Preserve enum parsing semantics exactly. If a legacy fromString(String) method threw IllegalArgumentException for null, blank, whitespace, or invalid input, keep that behavior unchanged.</guideline>
+        <guideline>Do NOT replace exception-throwing parse methods with null-returning or default-returning implementations unless requirements explicitly say so.</guideline>
+        <guideline>Preserve legacy boolean helper semantics exactly, such as isCompleted(), isPending(), isExpired(), or similar status-based methods.</guideline>
+        <guideline>Do NOT introduce Objects.requireNonNull or equivalent strict validation into model or repository APIs if the legacy tests depend on looser null-handling behavior.</guideline>
+        <verification>
+            After implementation, run `mvn test` and confirm 0 failures before
+            proceeding to SonarQube analysis. If tests fail, fix the compatibility issue before
+            moving on — do not skip or work around failing tests.
+        </verification>
+        <focused-verification>
+            After each change to a model, enum, parser, repository, or helper method,
+            run the relevant focused tests for that class before running the full suite.
+        </focused-verification>
+    </java21-record-test-compatibility>
+
+    <testing-immutable-records>
+        <description>
+            When testing Java 21 records (immutable data classes), traditional test patterns
+            that rely on setters no longer work. Use the "with" pattern to create modified
+            copies for testing state changes.
+        </description>
+        <problem><![CDATA[
+// Legacy mutable class test pattern (DOES NOT WORK with records)
+Order order = new Order();
+order.setStatus(OrderStatus.PENDING);
+order.setStatus(OrderStatus.COMPLETED);  // Modify state
+assertEquals(OrderStatus.COMPLETED, order.getStatus());
+        ]]></problem>
+        <solution><![CDATA[
+// Record immutability pattern - create new instances with modified values
+Order order = new Order(1L, customer, items, OrderStatus.PENDING, LocalDateTime.now());
+
+// To test status change, create a new instance with different status
+Order completedOrder = order.withStatus(OrderStatus.COMPLETED);
+
+assertEquals(OrderStatus.PENDING, order.getStatus());      // Original unchanged
+assertEquals(OrderStatus.COMPLETED, completedOrder.getStatus());  // New instance
+        ]]></solution>
+        <with-method-pattern><![CDATA[
+// Add "with" methods to records for creating modified copies
+public record Order(
+    Long id,
+    Customer customer,
+    List<OrderItem> items,
+    OrderStatus status,
+    LocalDateTime createdAt
+) {
+    // Legacy getter for backward compatibility
+    public OrderStatus getStatus() { return status; }
+
+    // "with" method for creating modified copies
+    public Order withStatus(OrderStatus newStatus) {
+        return new Order(id, customer, items, newStatus, createdAt);
+    }
+
+    // Add "with" methods for other fields as needed
+    public Order withCustomer(Customer newCustomer) {
+        return new Order(id, newCustomer, items, status, createdAt);
+    }
+}
+        ]]></with-method-pattern>
+        <test-example><![CDATA[
+@Test
+void shouldTransitionOrderStatus() {
+    // Arrange - create initial immutable order
+    Order pendingOrder = new Order(
+        1L,
+        new Customer("John Doe", "john@example.com"),
+        List.of(new OrderItem("Product A", 2, new BigDecimal("29.99"))),
+        OrderStatus.PENDING,
+        LocalDateTime.now()
+    );
+
+    // Act - create new instance with modified status
+    Order processingOrder = pendingOrder.withStatus(OrderStatus.PROCESSING);
+    Order completedOrder = processingOrder.withStatus(OrderStatus.COMPLETED);
+
+    // Assert - verify each instance has correct state
+    assertEquals(OrderStatus.PENDING, pendingOrder.getStatus());
+    assertEquals(OrderStatus.PROCESSING, processingOrder.getStatus());
+    assertEquals(OrderStatus.COMPLETED, completedOrder.getStatus());
+
+    // Verify original order is unchanged (immutability)
+    assertNotSame(pendingOrder, completedOrder);
+}
+        ]]></test-example>
+        <rules>
+            <rule>Always add "with" methods to records when tests need to verify state changes</rule>
+            <rule>Never try to modify record fields directly - records are immutable</rule>
+            <rule>Use descriptive variable names for each state (pendingOrder, completedOrder)</rule>
+            <rule>Test immutability by verifying original instances remain unchanged</rule>
+            <rule>Add "with" methods during record creation, not as an afterthought</rule>
+        </rules>
+    </testing-immutable-records>
+
+    <jackson-serialization>
+        <description>
+            Spring Boot projects that include SpringDoc OpenAPI (springdoc-openapi-starter-webmvc-ui) can have
+            their shared ObjectMapper's visibility settings overridden by SpringDoc's schema introspection.
+            This causes REST endpoints to return only `isXxx()` boolean properties while all other fields
+            (getId(), getCustomerId(), etc.) are silently omitted from the JSON response.
+        </description>
+        <rule>
+            Always generate a JacksonConfig class in the config package that explicitly sets ObjectMapper
+            visibility. This makes serialization deterministic regardless of what third-party libraries do
+            to the ObjectMapper. Generate this class once when creating the project structure:
+        </rule>
+        <example><![CDATA[
+@Configuration
+public class JacksonConfig {
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
+        return builder -> builder
+            .visibility(PropertyAccessor.GETTER, Visibility.PUBLIC_ONLY)
+            .visibility(PropertyAccessor.IS_GETTER, Visibility.PUBLIC_ONLY)
+            .visibility(PropertyAccessor.FIELD, Visibility.NONE)
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
+}
+        ]]></example>
+        <rule>
+            If a REST endpoint returns objects with only boolean fields (e.g. only `overdue: false` when
+            the model has many more fields), the root cause is almost always ObjectMapper visibility being
+            overridden. Fix by generating the JacksonConfig class above — do not patch individual model
+            classes with @JsonProperty annotations.
+        </rule>
+    </jackson-serialization>
+</development-best-practices>

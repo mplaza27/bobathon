@@ -1,0 +1,114 @@
+* IBM MQ Queue Definitions for Order Processing System
+* Queue Manager: QM1
+* Version: 1.0
+* Description: Defines queues used by the ACE Order Processing application
+
+* ========================================
+* Application Queues
+* ========================================
+
+* ORDER.OUTPUT - Main output queue for processed orders
+DEFINE QLOCAL(ORDER.OUTPUT) +
+    DESCR('Processed order messages ready for downstream systems') +
+    PUT(ENABLED) +
+    GET(ENABLED) +
+    DEFPSIST(YES) +
+    MAXDEPTH(50000) +
+    MAXMSGL(4194304) +
+    SHARE +
+    NOTRIGGER +
+    USAGE(NORMAL) +
+    REPLACE
+
+* ORDER.ERROR - Error queue for failed order processing
+DEFINE QLOCAL(ORDER.ERROR) +
+    DESCR('Failed order messages with error details') +
+    PUT(ENABLED) +
+    GET(ENABLED) +
+    DEFPSIST(YES) +
+    MAXDEPTH(10000) +
+    MAXMSGL(4194304) +
+    SHARE +
+    NOTRIGGER +
+    USAGE(NORMAL) +
+    REPLACE
+
+* ORDER.DEADLETTER - Dead letter queue for unrecoverable messages
+DEFINE QLOCAL(ORDER.DEADLETTER) +
+    DESCR('Dead letter queue for messages that cannot be processed') +
+    PUT(ENABLED) +
+    GET(ENABLED) +
+    DEFPSIST(YES) +
+    MAXDEPTH(5000) +
+    MAXMSGL(4194304) +
+    SHARE +
+    NOTRIGGER +
+    USAGE(NORMAL) +
+    REPLACE
+
+* ========================================
+* Backout Queue
+* ========================================
+
+* ORDER.BACKOUT - Backout queue for messages that exceed retry limit
+DEFINE QLOCAL(ORDER.BACKOUT) +
+    DESCR('Backout queue for messages exceeding retry threshold') +
+    PUT(ENABLED) +
+    GET(ENABLED) +
+    DEFPSIST(YES) +
+    MAXDEPTH(5000) +
+    MAXMSGL(4194304) +
+    SHARE +
+    NOTRIGGER +
+    USAGE(NORMAL) +
+    REPLACE
+
+* ========================================
+* Transmission Queues (if needed for remote QMs)
+* ========================================
+
+* ORDER.XMIT - Transmission queue for remote queue manager
+* DEFINE QLOCAL(ORDER.XMIT) +
+*     DESCR('Transmission queue for remote systems') +
+*     USAGE(XMITQ) +
+*     PUT(ENABLED) +
+*     GET(ENABLED) +
+*     DEFPSIST(YES) +
+*     MAXDEPTH(50000) +
+*     MAXMSGL(4194304) +
+*     TRIGGER +
+*     TRIGTYPE(FIRST) +
+*     TRIGDATA(CHANNEL.NAME) +
+*     INITQ(SYSTEM.CHANNEL.INITQ) +
+*     REPLACE
+
+* ========================================
+* Queue Aliases (optional)
+* ========================================
+
+* ORDER.ALIAS - Alias for ORDER.OUTPUT
+* DEFINE QALIAS(ORDER.ALIAS) +
+*     DESCR('Alias for ORDER.OUTPUT queue') +
+*     TARGET(ORDER.OUTPUT) +
+*     REPLACE
+
+* ========================================
+* Set Queue Manager Attributes
+* ========================================
+
+ALTER QMGR +
+    DESCR('Order Processing Queue Manager') +
+    DEADQ(ORDER.DEADLETTER) +
+    MAXMSGL(4194304)
+
+* ========================================
+* Display Queue Status (for verification)
+* ========================================
+
+* Uncomment to display queue status after creation
+* DISPLAY QLOCAL(ORDER.*)
+* DISPLAY QMGR
+
+* ========================================
+* End of Queue Definitions
+* ========================================
