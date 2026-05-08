@@ -24,7 +24,8 @@ Now let's get started connecting to the Bob VM. For this environment access, ple
 `http://techzone.ibm.com/`
 
 In TechZone, now please select the dropdown on "My TechZone" on the upper left part of the menu, and select "My Requests":
-<img width="1242" alt="Screenshot 2026-05-08 at 2 54 56 PM" src="https://github.ibm.com/user-attachments/assets/0b0a6be1-cbaa-497c-a87f-cbe32df7fae3" />
+![Step 1](./Costco_Bobathon_Setup_Screenshots/1.png)
+<img src="./Costco_Bobathon_Setup_Screenshots/1.png" width="1200"/>
 .
  
 .
