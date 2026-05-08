@@ -1,8 +1,172 @@
-> TEMP README
+# Welcome to the Costco Bobathon
+In today's session, we'll introduce you to IBM Bob and together we'll see how Bob can solve your greatest challenges. Meet IBM Bob, your virtual IDE Partner who is much more than a Software Development Lifecycle agent. We'll start by introducing you to Bob, going through an overview of who Bob is and what Bob can do, and then we'll get our hands dirty with a collection of interactive lab exercies. Today's labs are divided into 3 main sections:
+1. Introductory Bob Lab
+2. Advanced Bob Labs
+3. Costco-Specific Deep-Dive Labs (ACE and IBM i / RPG)
 
-# Start and Initial Setup
 
-Navigate and complete the [PREREQUISITES](./PREREQUISITE.md) section first, then return here and start with lab 1.
+Please follow along these steps to get started!
+
+## Start and Initial Setup
+
+### Prerequisites Prior to Connecting to Bob
+First we will get you all connected to IBM Bob on your local machine. You'll do so by connecting to a Virtual Machine (VM) that we have provisioned for you. But before that, you'll need to have the following prerequisites completed. To do so, we'll have you complete the following steps below, or ensure that you have already done them:
+- Please first accept your **IBM Cloud email to join the account instance** that was shared with you, if you have not done so already.
+- Next, we'll have you create your own **IBM ID** using your own email address, if you haven't done so yet.
+- Finally, ensure that you've gotten the **"Welcome to Bob" email** and have used your IBM ID to get linked up properly with our shared enterprise account TS022055599_FTD_may16.
+
+If those three things are all completed, then you are set to proceed with connecting to Bob
+
+
+### Connecting to Bob
+Now let's get started connecting to the Bob VM. For this environment access, please start by going to IBM Technology Zone:
+
+`http://techzone.ibm.com/`
+
+In TechZone, now please select the dropdown on "My TechZone" on the upper left part of the menu, and select "My Requests":
+<img width="1242" alt="Screenshot 2026-05-08 at 2 54 56 PM" src="https://github.ibm.com/user-attachments/assets/0b0a6be1-cbaa-497c-a87f-cbe32df7fae3" />
+.
+ 
+.
+
+
+Now you should see the reservation we shared with you, titled something like "costco##". Select it:
+<img width="1389" alt="Screenshot 2026-05-08 at 2 56 58 PM" src="https://github.ibm.com/user-attachments/assets/b0544c60-640a-49b0-b652-795abdda665c" />
+.
+ 
+.
+
+
+Now, in this reservation, select the carrot arrow button down in the bottom left to expand it like this:
+<img width="1388" alt="Screenshot 2026-05-08 at 2 58 38 PM" src="https://github.ibm.com/user-attachments/assets/2e3a5686-1697-4e5f-9aa5-5a578d399829" />
+.
+ 
+.
+
+
+Scroll down until you see a Guacamole link like this example here. When you select this, it will take you to the Guacamole link:
+<img width="1387" alt="Screenshot 2026-05-08 at 2 59 27 PM" src="https://github.ibm.com/user-attachments/assets/1b1e4707-726d-4f30-a657-be6b3b37f843" />
+.
+ 
+.
+
+
+You should see a screen that looks like this here. If you don't see a VM screenshot appearing under the "Recent" Tab, you should expand the "+" icon in the "All Connections" to view it. Then select the black VM screenshot icon that appears in that section:
+<img width="1387" alt="Screenshot 2026-05-08 at 3 02 34 PM" src="https://github.ibm.com/user-attachments/assets/d164a8e1-b669-48ef-a086-67ea9a554eb6" />
+.
+ 
+.
+
+
+You should now see a VM machine that looks something like this. If you're not seeing this yet, please select the "Activities" Red Hat icon in the upper left corner:
+<img width="1387" alt="Screenshot 2026-05-08 at 3 11 40 PM" src="https://github.ibm.com/user-attachments/assets/bffd2c5e-130b-43de-a26d-c180f003cc89" />
+.
+ 
+.
+
+
+Now search for "IBM Bob" in the search bar in the upper middle of the VM screen. Select the IBM Bob icon like this:
+<img width="1388" alt="Screenshot 2026-05-08 at 3 13 17 PM" src="https://github.ibm.com/user-attachments/assets/097d659a-ac1d-4d7a-8c5d-14abdb4de6b6" />
+.
+ 
+.
+
+
+This process may take a few moments for the IBM Bob IDE to open up. Once it does, please skip any intro messages that come up. Please exit out of any Gnome warnings that arise and cancel any Bob upgrade prompts/messages. You should see something like this:
+<img width="1387" alt="Screenshot 2026-05-08 at 3 16 24 PM" src="https://github.ibm.com/user-attachments/assets/08f6c8d6-4f0c-47ae-b8bf-9da12de67030" />
+.
+ 
+.
+
+
+Then hit the blue "Log in to Bob" button in the bottom right corner, in the Bob section of the ID. When a popup appears prompting you to sign in using Bob via an extension, hit "Allow".
+<img width="1389" alt="Screenshot 2026-05-08 at 3 16 59 PM" src="https://github.ibm.com/user-attachments/assets/db02acc7-aa3f-49ad-b845-0862dac03b2f" />
+.
+ 
+.
+
+
+You'll next be prompted to let Bob open the external website. Press "Open". Then it should take you to the VM web browser. In that, please enter your IBM ID credentials.
+<img width="1388" alt="Screenshot 2026-05-08 at 3 19 53 PM" src="https://github.ibm.com/user-attachments/assets/0bc00a92-a826-4f2e-9160-c48407c9ba07" />
+.
+ 
+.
+
+
+You should now see an "Authentication Successful" message appear in your VM browser like this here. If you see this, you can now close out of the VM web browser window.
+<img width="1387" alt="Screenshot 2026-05-08 at 3 21 55 PM" src="https://github.ibm.com/user-attachments/assets/13db1682-24fb-4302-8354-5510cfdca7e0" />
+.
+ 
+.
+
+
+You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to begin using Bob here in the interactive Bob chat window. Here, you will enter commands for Bob to execute. Simply provide plain English and Bob will get to work completing your requests.
+<img width="1388" alt="Screenshot 2026-05-08 at 3 23 09 PM" src="https://github.ibm.com/user-attachments/assets/3d56ac63-aa96-45e7-94fc-b30406262ccf" />
+.
+ 
+.
+
+
+You are now all set to begin interacting with Bob! 
+
+
+
+### Project Structure
+
+You should have a folder in your workspace/VM that looks like:
+
+```
+Costco-Bob-Labs/
+├── README.md                           # Main lab guide
+├── PREREQUISITE.md                     # Prerequisites and initial setup
+├── .gitignore                          # Git ignore rules
+├── .bob/                               # Bob configuration
+├── Lab1/                               # Lab 1: ACE/MQ Integration
+│   ├── Bob-fundamentals.md             # Lab 1 setup instructions
+│   ├── CHEATSHEET.md                   # Quick reference for Bob commands
+│   ├── ace-project/                    # ACE integration project
+│   │   ├── project.json                # Project metadata
+│   │   ├── JavaCompute/                # Java transformation code
+│   │   │   └── TransformMessage.java   # Main transformation class
+│   │   └── MessageFlows/               # ACE message flows
+│   │       ├── MainFlow.msgflow        # Primary message flow
+│   │       └── ErrorHandling.subflow   # Error handling logic
+│   └── mq-config/                      # MQ configuration files
+│       ├── queue-definitions.mqsc      # Queue definitions
+│       └── qm-config.yaml              # Queue manager configuration
+├── Lab2/                               # Lab 2: Smart SDLC
+│   ├── Java-modernization.md           # Lab 2 setup instructions
+│   ├── .env.example                    # Environment variables template
+│   ├── screenshots/                    # Lab 2 screenshots
+│   └── snapB-java-upgrade/             # Java upgrade project
+│       ├── pom.xml                     # Maven configuration
+│       ├── Dockerfile                  # Docker configuration
+│       ├── docker-compose.yml          # Docker Compose setup
+│       ├── Makefile                    # Build automation
+│       ├── README-AUTOMATION.md        # Automation guide
+│       ├── QUICK-REFERENCE.md          # Quick reference
+│       ├── quick-start.sh              # Quick start script
+│       ├── run-liberty.sh              # Liberty server start script
+│       ├── stop-liberty.sh             # Liberty server stop script
+│       └── src/                        # Source code
+│           ├── main/java/com/pharmacy/ # Pharmacy application
+│           ├── main/liberty/config/    # Liberty configuration
+│           ├── main/resources/         # Application resources
+│           └── main/webapp/            # Web application files
+└── Lab3/                               # Lab 3: Advanced Topics
+    ├── Custom-ACE-Flow/                # Custom ACE deployment lab
+    │   ├── README.md                   # ACE flow lab guide
+    │   └── example_prompts.txt         # Example prompts
+    └── IBM-i-Labs/                     # IBM i and RPG labs
+        ├── README.md                   # IBM i labs overview
+        ├── bob-rpg-ibm-i-main.zip      # RPG project archive
+        ├── Lab3.0-RPG-Project-Introduction.md
+        ├── Lab3.1-RPG-Documentation.md
+        ├── Lab3.2-UI-Modernization.md
+        └── Lab3.3-DDS-to-SQL-RLA-Refactoring.md
+```
+
+---
 
 # LAB 1
 
@@ -10,55 +174,18 @@ Navigate and complete the [PREREQUISITES](./PREREQUISITE.md) section first, then
 
 This hands-on lab introduces you to Bob, an AI coding assistant integrated into VS Code. You'll work with a sample ACE/MQ integration project to practice Bob's core capabilities: code navigation, analysis, modification, and documentation.
 
----
+## To Start
 
-### Project Structure
+Launch IBM Bob application by going to `Activities` and pressing on the `Bob` icon.
 
-After cloning, your workspace should contain:
+Open the Folder `Lab1` and begin by following the set up guide.
 
-```
-bobathon-lab1/
-├── README.md                           # Main lab guide
-├── SETUP.md                            # This file
-├── CHEATSHEET.md                       # Quick reference for Bob commands
-├── LICENSE                             # MIT License
-├── .gitignore                          # Git ignore rules
-├── ace-project/                        # ACE integration project
-│   ├── project.json                    # Project metadata
-│   ├── JavaCompute/                    # Java transformation code
-│   │   └── TransformMessage.java       # Main transformation class
-│   └── MessageFlows/                   # ACE message flows
-│       ├── MainFlow.msgflow            # Primary message flow
-│       └── ErrorHandling.subflow       # Error handling logic
-└── mq-config/                          # MQ configuration files
-    ├── queue-definitions.mqsc          # Queue definitions
-    └── qm-config.yaml                  # Queue manager configuration
-```
+## Lab Guide
+
+### [Bob fundamentals](./Lab1/Bob-fundamentals.md)
+> Once finished, close out of Bob and follow the steps below to continue with Lab 2.
 
 ---
-
-### Lab Timeline
-
-| Time | Activity | Duration |
-|------|----------|----------|
-| 0:00 | Setup and Introduction | 5 min |
-| 0:05 | Exercise 1: Code Navigation | 10 min |
-| 0:15 | Exercise 2: Visual Architecture Mapping | 12 min |
-| 0:27 | Exercise 3: Code Analysis and Improvement | 10 min |
-| 0:37 | Exercise 4: Documentation Generation | 8 min |
-| 0:45 | Summary and Q&A | 5 min |
-
-Total: 50 minutes (includes 5 minutes buffer)
-
----
-
-## Setup
-
-### [HERE](./lab1/LAB-1-SETUP.md)
-> Notes:
-
-> abcd
-
 
 # LAB 2
 
@@ -66,40 +193,39 @@ Total: 50 minutes (includes 5 minutes buffer)
 
 This guide covers the complete setup of the IBM Bob Smart SDLC lab environment. It is written for lab administrators as well as participants and accounts for the necessary setup and for **every issue encountered during the initial setup**.
 
----
+## To Start
 
-### Architecture Overview
+Launch IBM Bob application by going to `Activities` and pressing on the `Bob` icon.
 
-```
-GitHub IBM         
-  .bob/rules-*/                  ──►  lab
-  lab2/snapB-java-upgrade/           .bob/ (rules + credentials to the jira board)
-                                        lab2-snapB-java-upgrade/
-                                        lab2-modernized-pharmacy-app/  ◄── Bob pushes here based on Jira ticket
-                                                │
-                                                ▼
-                                       Update Jira ticket with final bob run details
-```
+Open the Folder `Lab2` and begin by following the set up guide.
+
+## Lab Guide
+
+### [Java modernization](./Lab2/Java-modernization.md)
+> Once finished, close out of Bob and follow the steps below to continue with Lab 3.
 
 
 ---
-
-## Setup
-
-### [HERE](./lab2/LAB-2-SETUP.md)
-> Notes:
-
-> abcd
-
 
 # LAB 3
 
 ## Overview
-abcd
+In this session, there are two interactive deep dive labs. The first focuses on creating your own custom ACE deployment, and the second explores how Bob can help with IBM i and RPG.
+To get started, select the folder for the lab you wish to try, and follow the READMEs to try out each lab exercise with the assistance of Bob.
 
-## Setup
+## To Start
 
-### [HERE](./lab3/LAB-3-SETUP.md)
-> Notes:
+Launch IBM Bob application by going to `Activities` and pressing on the `Bob` icon.
 
-> abcd
+Open the Folder `Lab3` and begin by following the set up guide.
+
+## Lab Guide
+
+### [Lab 3.0 RPG Project Introduction](./Lab3/IBM-i-Labs/Lab3.0-RPG-Project-Introduction.md)
+
+### [Lab 3.1 RPG Documentation](./Lab3/IBM-i-Labs/Lab3.1-RPG-Documentation.md)
+
+### [Lab 3.2 UI Modernization](./Lab3/IBM-i-Labs/Lab3.2-UI-Modernization.md)
+
+### [Lab 3.3 DDS to SQL RLA Refactoring](./Lab3/IBM-i-Labs/Lab3.3-DDS-to-SQL-RLA-Refactoring.md)
+

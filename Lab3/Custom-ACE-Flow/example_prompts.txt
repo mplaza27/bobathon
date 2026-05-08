@@ -1,0 +1,30 @@
+Example Prompts
+
+Prompt #1: Create ACE Flow
+
+Please construct a minimal, demo-ready IBM App Connect Enterprise environment here in this folder. Please create the simplest possible ACE workflow that proves ACE can receive an HTTP request, transform/enrich the message, and return a clean JSON response, to meet the example request below.
+
+Input JSON:
+{
+  "customerId": "123",
+  "customerName": "Acme Corp",
+  "requestType": "status"
+}
+
+Return JSON:
+{
+  "customerId": "123",
+  "customerName": "Acme Corp",
+  "requestType": "status",
+  "status": "Processed by IBM App Connect Enterprise",
+  "timestamp": "<current timestamp>"
+}
+
+Keep this intentionally minimal. Do not add MQ, databases, Kafka, authentication, CI/CD, or complex integrations unless absolutely necessary. Prioritize a clean local/containerized demo that can be shown in 5 minutes.
+
+
+
+
+Prompt #2: Custom Creation Mode
+
+Please construct a YAML file I can copy/paste to create a new mode called "ACE Expert Mode" that will write and manage components of ACE flow code: BAR files, esql, message flow files, necessary JSON/YAML files, and anything else needed to work with ACE deployments (either new ones from scratch or existing ones). Make this custom mode add clear documentation steps along the way in a separate file that tracks each step of the ACE deployment process in detail, explaining what was done and why it was done. Please make this custom mode be adaptive and ask questions of the human user throughout the process; please have this mode not automatically assume context. Please have it ask for relevant permissions always and be clear and transparent to the user what file(s) it wants to modify, how, and why it wants to modify them.
