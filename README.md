@@ -25,84 +25,83 @@ Now let's get started connecting to the Bob VM. For this environment access, ple
 
 In TechZone, now please select the dropdown on "My TechZone" on the upper left part of the menu, and select "My Requests":
 ![Step 1](./Costco_Bobathon_Setup_Screenshots/1.png)
-<img src="./Costco_Bobathon_Setup_Screenshots/1.png" width="1200"/>
 .
  
 .
 
 
 Now you should see the reservation we shared with you, titled something like "costco##". Select it:
-<img width="1389" alt="Screenshot 2026-05-08 at 2 56 58 PM" src="https://github.ibm.com/user-attachments/assets/b0544c60-640a-49b0-b652-795abdda665c" />
+![Step 2](./Costco_Bobathon_Setup_Screenshots/2.png)
 .
  
 .
 
 
 Now, in this reservation, select the carrot arrow button down in the bottom left to expand it like this:
-<img width="1388" alt="Screenshot 2026-05-08 at 2 58 38 PM" src="https://github.ibm.com/user-attachments/assets/2e3a5686-1697-4e5f-9aa5-5a578d399829" />
+![Step 3](./Costco_Bobathon_Setup_Screenshots/3.png)
 .
  
 .
 
 
 Scroll down until you see a Guacamole link like this example here. When you select this, it will take you to the Guacamole link:
-<img width="1387" alt="Screenshot 2026-05-08 at 2 59 27 PM" src="https://github.ibm.com/user-attachments/assets/1b1e4707-726d-4f30-a657-be6b3b37f843" />
+![Step 4](./Costco_Bobathon_Setup_Screenshots/4.png)
 .
  
 .
 
 
 You should see a screen that looks like this here. If you don't see a VM screenshot appearing under the "Recent" Tab, you should expand the "+" icon in the "All Connections" to view it. Then select the black VM screenshot icon that appears in that section:
-<img width="1387" alt="Screenshot 2026-05-08 at 3 02 34 PM" src="https://github.ibm.com/user-attachments/assets/d164a8e1-b669-48ef-a086-67ea9a554eb6" />
+![Step 5](./Costco_Bobathon_Setup_Screenshots/5.png)
 .
  
 .
 
 
 You should now see a VM machine that looks something like this. If you're not seeing this yet, please select the "Activities" Red Hat icon in the upper left corner:
-<img width="1387" alt="Screenshot 2026-05-08 at 3 11 40 PM" src="https://github.ibm.com/user-attachments/assets/bffd2c5e-130b-43de-a26d-c180f003cc89" />
+![Step 6](./Costco_Bobathon_Setup_Screenshots/6.png)
 .
  
 .
 
 
 Now search for "IBM Bob" in the search bar in the upper middle of the VM screen. Select the IBM Bob icon like this:
-<img width="1388" alt="Screenshot 2026-05-08 at 3 13 17 PM" src="https://github.ibm.com/user-attachments/assets/097d659a-ac1d-4d7a-8c5d-14abdb4de6b6" />
+![Step 7](./Costco_Bobathon_Setup_Screenshots/7.png)
 .
  
 .
 
 
 This process may take a few moments for the IBM Bob IDE to open up. Once it does, please skip any intro messages that come up. Please exit out of any Gnome warnings that arise and cancel any Bob upgrade prompts/messages. You should see something like this:
-<img width="1387" alt="Screenshot 2026-05-08 at 3 16 24 PM" src="https://github.ibm.com/user-attachments/assets/08f6c8d6-4f0c-47ae-b8bf-9da12de67030" />
+![Step 8](./Costco_Bobathon_Setup_Screenshots/8.png)
 .
  
 .
 
 
 Then hit the blue "Log in to Bob" button in the bottom right corner, in the Bob section of the ID. When a popup appears prompting you to sign in using Bob via an extension, hit "Allow".
-<img width="1389" alt="Screenshot 2026-05-08 at 3 16 59 PM" src="https://github.ibm.com/user-attachments/assets/db02acc7-aa3f-49ad-b845-0862dac03b2f" />
+![Step 9](./Costco_Bobathon_Setup_Screenshots/9.png)
 .
  
 .
 
 
 You'll next be prompted to let Bob open the external website. Press "Open". Then it should take you to the VM web browser. In that, please enter your IBM ID credentials.
-<img width="1388" alt="Screenshot 2026-05-08 at 3 19 53 PM" src="https://github.ibm.com/user-attachments/assets/0bc00a92-a826-4f2e-9160-c48407c9ba07" />
+![Step 10](./Costco_Bobathon_Setup_Screenshots/10.png)
 .
  
 .
 
 
 You should now see an "Authentication Successful" message appear in your VM browser like this here. If you see this, you can now close out of the VM web browser window.
-<img width="1387" alt="Screenshot 2026-05-08 at 3 21 55 PM" src="https://github.ibm.com/user-attachments/assets/13db1682-24fb-4302-8354-5510cfdca7e0" />
+![Step 11](./Costco_Bobathon_Setup_Screenshots/11.png)
 .
  
 .
 
 
 You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to begin using Bob here in the interactive Bob chat window. Here, you will enter commands for Bob to execute. Simply provide plain English and Bob will get to work completing your requests.
-<img width="1388" alt="Screenshot 2026-05-08 at 3 23 09 PM" src="https://github.ibm.com/user-attachments/assets/3d56ac63-aa96-45e7-94fc-b30406262ccf" />
+![Step 12](./Costco_Bobathon_Setup_Screenshots/12.png)
 .
  
 .
