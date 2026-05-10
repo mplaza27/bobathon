@@ -12,10 +12,10 @@ Please follow along these steps to get started!
 ### Prerequisites Prior to Connecting to Bob
 First we will get you all connected to IBM Bob on your local machine. You'll do so by connecting to a Virtual Machine (VM) that we have provisioned for you. But before that, you'll need to have the following prerequisites completed. To do so, we'll have you complete the following steps below, or ensure that you have already done them:
 - Please first accept your **IBM Cloud email to join the account instance** that was shared with you, if you have not done so already.
-- Next, we'll have you create your own **IBM ID** using your own email address, if you haven't done so yet.
-- Finally, ensure that you've gotten the **"Welcome to Bob" email** and have used your IBM ID to get linked up properly with our shared enterprise account TS022055599_FTD_may16.
+- Next, we'll have you create your own **IBM ID** using your Costco email address, if you haven't done so yet.
+- Finally, ensure that you've gotten the **"Welcome to Bob" email** from IBM SaaS and have used your IBM ID to get linked up properly with our shared enterprise account TS022055599_FTD_may16.
 
-If those three things are all completed, then you are set to proceed with connecting to Bob
+If those three things are all completed, then you are set to proceed with connecting to Bob.
 
 
 ### Connecting to Bob
@@ -23,89 +23,65 @@ Now let's get started connecting to the Bob VM. For this environment access, ple
 
 `http://techzone.ibm.com/`
 
-In TechZone, now please select the dropdown on "My TechZone" on the upper left part of the menu, and select "My Requests":
+1. In TechZone, now please select the dropdown on "My TechZone" on the upper left part of the menu, and select "My Requests":
 ![Step 1](./Costco_Bobathon_Setup_Screenshots/1.png)
-.
- 
-.
 
+<br>
 
-Now you should see the reservation we shared with you, titled something like "costco##". Select it:
+2. Now you should see the reservation we shared with you, titled something like "costco##". Select it:
 ![Step 2](./Costco_Bobathon_Setup_Screenshots/2.png)
-.
  
-.
+<br>
 
+3. Now, in this reservation, select the carrot arrow button down in the bottom left to expand it like this:
+![Step 3](./Costco_Bobathon_Setup_Screenshots/3.png).
 
-Now, in this reservation, select the carrot arrow button down in the bottom left to expand it like this:
-![Step 3](./Costco_Bobathon_Setup_Screenshots/3.png)
-.
- 
-.
+<br>
 
-
-Scroll down until you see a Guacamole link like this example here. When you select this, it will take you to the Guacamole link:
+4. Scroll down until you see a Guacamole link like this example here. When you select this, it will take you to the Guacamole link:
 ![Step 4](./Costco_Bobathon_Setup_Screenshots/4.png)
-.
- 
-.
 
+<br>
 
-You should see a screen that looks like this here. If you don't see a VM screenshot appearing under the "Recent" Tab, you should expand the "+" icon in the "All Connections" to view it. Then select the black VM screenshot icon that appears in that section:
+5. You should see a screen that looks like this here. If you don't see a VM screenshot appearing under the "Recent" Tab, you should expand the "+" icon in the "All Connections" to view it. Then select the black VM screenshot icon that appears in that section:
 ![Step 5](./Costco_Bobathon_Setup_Screenshots/5.png)
-.
- 
-.
 
+<br>
 
-You should now see a VM machine that looks something like this. If you're not seeing this yet, please select the "Activities" Red Hat icon in the upper left corner:
+6. You should now see a VM machine that looks something like this. If you're not seeing this yet, please select the "Activities" Red Hat icon in the upper left corner:
 ![Step 6](./Costco_Bobathon_Setup_Screenshots/6.png)
-.
- 
-.
 
+<br>
 
-Now search for "IBM Bob" in the search bar in the upper middle of the VM screen. Select the IBM Bob icon like this:
+7. Now search for "IBM Bob" in the search bar in the upper middle of the VM screen. Select the IBM Bob icon like this:
 ![Step 7](./Costco_Bobathon_Setup_Screenshots/7.png)
-.
- 
-.
 
+<br>
 
-This process may take a few moments for the IBM Bob IDE to open up. Once it does, please skip any intro messages that come up. Please exit out of any Gnome warnings that arise and cancel any Bob upgrade prompts/messages. You should see something like this:
+8. This process may take a few moments for the IBM Bob IDE to open up. Once it does, please skip any intro messages that come up. Please exit out of any Gnome warnings that arise and cancel any Bob upgrade prompts/messages. You should see something like this:
 ![Step 8](./Costco_Bobathon_Setup_Screenshots/8.png)
-.
- 
-.
 
+<br>
 
-Then hit the blue "Log in to Bob" button in the bottom right corner, in the Bob section of the ID. When a popup appears prompting you to sign in using Bob via an extension, hit "Allow".
+9. Then hit the blue "Log in to Bob" button in the bottom right corner, in the Bob section of the ID. When a popup appears prompting you to sign in using Bob via an extension, hit "Allow".
 ![Step 9](./Costco_Bobathon_Setup_Screenshots/9.png)
-.
- 
-.
 
+<br>
 
-You'll next be prompted to let Bob open the external website. Press "Open". Then it should take you to the VM web browser. In that, please enter your IBM ID credentials.
+10. You'll next be prompted to let Bob open the external website. Press "Open". Then it should take you to the VM web browser. In that, please enter your IBM ID credentials.
 ![Step 10](./Costco_Bobathon_Setup_Screenshots/10.png)
-.
- 
-.
 
+<br>
 
-You should now see an "Authentication Successful" message appear in your VM browser like this here. If you see this, you can now close out of the VM web browser window.
+11. You should now see an "Authentication Successful" message appear in your VM browser like this here. If you see this, you can now close out of the VM web browser window.
 ![Step 11](./Costco_Bobathon_Setup_Screenshots/11.png)
-.
- 
-.
 
+<br>
 
-You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to begin using Bob here in the interactive Bob chat window. Here, you will enter commands for Bob to execute. Simply provide plain English and Bob will get to work completing your requests.
+12. You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to begin using Bob here in the interactive Bob chat window. Here, you will enter commands for Bob to execute. Simply provide plain English and Bob will get to work completing your requests.
 ![Step 12](./Costco_Bobathon_Setup_Screenshots/12.png)
-.
- 
-.
 
+<br>
 
 You are now all set to begin interacting with Bob! 
 
@@ -168,7 +144,7 @@ Costco-Bob-Labs/
 
 ---
 
-# LAB 1
+# Lab 1
 
 ## Overview
 
@@ -187,7 +163,7 @@ Open the Folder `Lab1` and begin by following the set up guide.
 
 ---
 
-# LAB 2
+# Lab 2
 
 ## Overview
 
@@ -207,7 +183,7 @@ Open the Folder `Lab2` and begin by following the set up guide.
 
 ---
 
-# LAB 3
+# Lab 3
 
 ## Overview
 In this session, there are two interactive deep dive labs. The first focuses on creating your own custom ACE deployment, and the second explores how Bob can help with IBM i and RPG.
