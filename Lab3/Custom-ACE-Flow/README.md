@@ -11,7 +11,7 @@ Please reference the steps below to get started.
 To create your custom ACE flow, please copy and paste the first example prompt. Let Bob do the building for you!
 
 
-##### Command 1.1: Create your Custom ACE Flow
+#### Command 1.1: Create your Custom ACE Flow
 You'll see Bob iteratively walk you through several steps, where it may ask you for your preferences when creating your own ACE workflow. For the sake of time in this lab, just instruct Bob to construct assets for you ACE Flow. This can be assets such as:
  - ESQL files
  - YAML files
@@ -28,34 +28,22 @@ After a few minutes, Bob should finish creating these files. Then you're ready t
 
 
   
-##### Command 1.2: Modifying the API Endpoint
+#### Command 1.2: Modifying the API Endpoint
 Please copy/paste this command below into your Bob Terminal:
 `Now please modify my API endpoint to be /requests/outgoing/custom1`
 
 Bob will now edit your message flow file and also the test api to perform this change. Observe how Bob asks you for permissions, makes it clear what it will want to change, and let's you actively intervene at any point. It may even update all user manuals and guides to reflect these changes. At the end, Bob should check to ensure all proper changes were made across your application.
 
-##### Command 1.3: Changing the Deployment Method
+#### Command 1.3: Changing the Deployment Method
 To make another modification, this time to say your deployment method, you can try running this command to the Bob chat:
 `Now please change the deployment method to Podman instead of Docker`
 
 You should see Bob now making the necessary file modifications to switch the deployment method to Podman if it isn't already using Podman. If Docker was previously used, you'll see Bob delete any old Docker files to clean up your repository. You should also see Bob change any downstream files depending on this deployment method, such as the setup instructions and quick start guide. Bob should verify that the proper modifications were made also.
 
-##### Command 1.4: Adding Additional Security Layer
+#### Command 1.4: Adding Additional Security Layer
 Now let's investigate this newly-constructed ACE flow from a security perpsective. Since this repository has just been created, it likely may have some exposed vulnerabilities. Try running the command below to see if there are any key vulnerabilities worth noting:
 
 `Please now run a preliminary vulnerability scan and let me know if any key security issues are apparent with this flow`
 
+Bob will then generate a complete security vulnerability analysis report. To view it, simply hit Cntrl + Shift + V. This report will present key security vunerabilities to you, breaking them down by severity level and informing you how crucial they are to address. It will likely list key issues such as the lack of proper authorization and encryption first, alerting you that these issues are critical and need to be addressed immediately. This analysis will not only inform you what they are and how serious they are; it will diagnose where the risks are coming from as well as specific steps and commands you can take to fix them. You can ask Bob for further clarifications here if you have any questions or want help implementing these vulnerabilities.
 
-
-
-
-
-
-
-
-### Section 2: Creating your Repeatable ACE Expert Bob Mode
-To create your own custom ACE Expert Bob Mode, please select "Mode Builder", and then copy and paste the second example prompt. From there you will get your own custom Bob mode created!
-   
-Follow Bob's steps to help you create your custom Bob mode. Here, Bob will construct your custom_modes.yaml file for you, which is the basis for your custom mode. Bob will then use that to create and launch your custom ACE Expert mode, which should then appear in the Mode Selection Section of your Bob IDE Console. If for some reason the newly-created ACE Expert Mode isn't appearing in this menu, you can simply instruct Bob to launch your mode and it will execute the steps necessary to get it up and running.
-
-Now you're ready to select your newly-constructed ACE Expert Mode to get started writing customized ACE flows!
