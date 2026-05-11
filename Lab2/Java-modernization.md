@@ -1,5 +1,40 @@
 # IBM Bob Lab — Java Modernization Lab Guide
 
+**Duration:** 45 minutes
+**Objective:** Learn to use Bob as an AI-powered Java Modernization Expert.
+
+## Learning Objectives
+
+By completing this lab, you will be able to:
+- Connect MCP servers to Bob IDE
+- Create and Understand Bob custom modes
+- See Bob understand and build off of a natural language userstory
+- Make code modifications with AI assistance
+- Create comprehensive documentation automatically
+
+## About This Lab
+In this lab we will use a generic user story defined in Jira tasks board to modify a legacy java app to a newer stack. We will leverage MCP servers to connect, read and modify a Jira task/ticket and a custom Bob mode to enhance the web application.
+
+### Understand the need:
+#### What is This Application?
+The **Simple Pharmacy Management System** provided to you in the lab is a web-based application designed to manage pharmacy operations including:
+- **Prescriptions**: Create and validate patient prescriptions
+- **Orders**: Process medication orders and payments
+- **Medicines**: Manage medicine inventory
+- **Dashboard**: Monitor pending prescriptions and orders
+
+#### What is Java Modernization?
+Java Modernization is the process of upgrading legacy Java applications to modern versions and platforms. This typically involves:
+- **Java Version Upgrade**: Moving from older Java versions (like Java 8) to newer LTS versions (like Java 21)
+- **Application Server Migration**: Transitioning from traditional servers (like WebSphere) to lightweight runtimes (like Liberty)
+- **Dependency Updates**: Modernizing libraries and frameworks to current, supported versions
+- **Code Transformation**: Updating code patterns to leverage modern Java features
+
+In this lab, you'll use a custom sdlc mode that you define to modernize a legacy pharmacy management application. The application currently runs on:
+- **Java Version**: 8
+You'll modernize it to:
+- **Java Version**: 21
+
 ## Prerequisites
 
 - IBM Bob IDE
