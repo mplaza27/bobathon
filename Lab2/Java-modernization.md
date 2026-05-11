@@ -316,7 +316,7 @@ Click on '+Create' on either the top of the board or on the bottom of the "TO-DO
 
 ![jira_create](./screenshots/jira_create.png)
 
-Start by adding the following Summary and Description to the ticket and press Create.
+Start by adding the following `Summary` and `Description` to the ticket and press `Create`.
 
 `Summary`:
 ```
