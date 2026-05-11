@@ -8,7 +8,7 @@
 
 - Atlassian account with Jira project access
   - The instructor should set up a free atlassian jira account here - https://www.atlassian.com/software/jira
-  - Use your gmail id or any other id since IBM id will require adding you to IBM account and it would be difficult to add the bootcamp participants to it.
+  - Use your gmail id or any other id since IBM id will require adding you to IBM account and it would be difficult to add the bobathon participants to it.
   - Continue to create your org space with atlassian.net domain and note it - eg: https://ce-squad-7.atlassian.net/
   - Create a new space in your jira dashboard. Click on the '+' sign next to the "Spaces" option on the left navigation options.
 
@@ -37,7 +37,7 @@
       </mcp_configuration>
     ```
 ---
-# For Bootcamp Participants:
+# For bobathon Participants:
 
 ## Step 1: Set up your Atlassian account and API
 Accept the invite from the instructor ro join a jira space, after which the instructor will be able to add you to the Jira Board.
