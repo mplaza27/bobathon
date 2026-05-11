@@ -310,12 +310,16 @@ When you run `mvn --version`, it shows the Java version that Maven will use to b
 ## Step 4: Set Up Jira User Stories
 Every participant needs a Jira User Story to work with. Here is the story that needs to be added to the board in the TO-DO list. This is a basic modernization request, feel free to add more details or functionality request to this if you want to experiment more.:
 
+### 4.1 Open up Jira
 To add a Jira Ticket go to the following board - https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1
 
-Click on '+Create' on either the top of the board or on the bottom of the "TO-DO" list
+### 4.2 Click Create Ticket
+Click on `+Create` on either the top of the board or on the bottom of the `TO-DO` list
 
 ![jira_create](./screenshots/jira_create.png)
+> This shows a jira board that's already populated, the steps are the same even if you have an empty board.
 
+### 4.3 Paste Ticket Information
 Start by adding the following `Summary` and `Description` to the ticket and press `Create`.
 
 `Summary`:
@@ -426,33 +430,43 @@ Move the story to Done only after all required checks pass.
 
 ![jira_fill_out](./screenshots/jira_fill_out.png)
 
+or
 
+![empty_board](./screenshots/empty_board.png)
+
+### 4.4 Click on the Ticket to Open the Details
 Once you click `Create`, there should be a pop up for the ticket. When the pop up shows up, click on the ticket name.
+> **Important**
+> Write down/remember the name of the ticket (i.e. SCRUM-11, SCRUM-12, or SCRUM-[your-number])
 
 ![jira_view_ticket](./screenshots/jira_view_ticket.png)
 
+### 4.5 Assign Ticket to Yourself
 Then assign the ticket to yourself and close out of the ticket screen. 
 
 ![jira_ticket_screen](./screenshots/jira_ticket_screen.png)
 
+### 4.6 Create Sprint
 Now we have to create a sprint and assign the ticket to the sprint.
 
 First, create a sprint by navigating to `Backlog` and clicking on `Create sprint`:
 
 ![jira_create_sprint](./screenshots/jira_create_sprint.png)
 
+### 4.7 Add Ticket to Sprint
 Now, drag the ticket into the sprint you just created and start the sprint.
 
 ![jira_drag_and_start_sprint](./screenshots/jira_drag_and_start_sprint.png)
 
+### 4.8 Start the Sprint
 Click through the next window to start the sprint.
 
 ![jira_start](./screenshots/jira_start.png)
 
+### 4.9 Validate Completion
 Now you should see the ticket on your `Board` page. If you do, you have successfully completed the Jira setup process and can proceed.
 
 ![jira_complete](./screenshots/jira_complete.png)
-
 
 
 ##### Important:
