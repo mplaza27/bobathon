@@ -5,9 +5,10 @@ Please reference the steps below to get started.
 
 ### Section 0: Prerequisites
 - Bob installed and logged in
+- Open Bob in the project directory "Custom-ACE-Flow"
+  - All you should see is this Readme file and the example_prompts.txt
 
 ### Section 1: Creating your First Custom ACE Flow
-
 
 #### Command 1.1: Create your Custom ACE Flow
 
