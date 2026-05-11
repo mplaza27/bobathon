@@ -331,14 +331,12 @@ Click on '+Create' on either the top of the board or on the bottom of the "TO-DO
 
 ![jira_create](./screenshots/jira_create.png)
 
-Start by adding the following title to the task/ticket and press "Enter".
+Start by adding the following `Summary` and `Description` to the ticket and press `Create`.
 
 `Summary`:
 ```
 Modernize the Pharmacy App from Java 8 / WebSphere Liberty to Java 21 / Liberty with Jakarta EE 8 and Struts 2
 ```
-
-Once you see the ticket, click on it and add the following to the description section.
 
 `Description`:
 ```text
