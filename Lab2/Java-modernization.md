@@ -431,7 +431,7 @@ Move the story to Done only after all required checks pass.
 
 ![jira_fill_out](./screenshots/jira_fill_out.png)
 
-or
+or if you have an empty board, it might look as follows:
 
 ![empty_board](./screenshots/empty_board.png)
 
