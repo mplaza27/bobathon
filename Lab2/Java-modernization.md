@@ -328,6 +328,7 @@ Modernize the Pharmacy App from Java 8 / WebSphere Liberty to Java 21 / Liberty 
 ```
 
 `Description`:
+
 ```text
 User story
 
