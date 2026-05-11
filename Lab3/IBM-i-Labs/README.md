@@ -11,7 +11,8 @@ Welcome to our collection of IBM i and RPG labs! In these lab exercises, you'll 
 - Bob installed and logged in
 - IBM-i-Labs files downloaded on your VM
 - Uncompress the zip file bob-rpg-ibm-i-main.zip
-- Set your Bob IDE directory to the resulting file folder bob-rpg-ibm-i-main
+- Set your Bob IDE directory to the file folder "IBM-i-Labs"
+  - You should see this Readme as well as the zip file and also markdown file lab guides for labs 3.0-3.3.
 - Now you're ready to follow those four lab guides above to perform the following labs!
 
 ### Section 1: Lab3.0-RPG-Project-Introduction
