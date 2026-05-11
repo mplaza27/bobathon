@@ -22,12 +22,12 @@
 ![img2.png](screenshots/img2.png)
 
   - On the next page you should be able to add all the members to the board
-  - Now you can start creating user stories on the board. Note the url of the board. You will need to add this to the custom mode docs to ensure the Smart SDLC mode accesses the correct user stories for all users. You only need To Do, In Progress and Done for this lab.
+  - Now you can start creating user stories on the board. Note the url of the board. You will need to add this to the custom mode docs to ensure the Smart SDLC mode accesses the correct user stories for all users. You only need To Do, In Progress and Done for this Lab.
 
 ![img.png](screenshots/img.png)
 
 - Custom mode updates (this can also be done by the participants)
-  - Modify the custom mode lab with the jira board information. This can also be done via the env file and by prompting bob to use the jira board details from the env file. But for this lab we would be hard coding the board details in the rules of the custom mode.
+  - Modify the custom mode Lab with the jira board information. This can also be done via the env file and by prompting bob to use the jira board details from the env file. But for this Lab we would be hard coding the board details in the rules of the custom mode.
   - In the .bob/rules-smart-sdlc/1_workflow.xml file, search for the **Fetch Jira User Story** block. For the mcp configuration section add the following details:
     ```bash
     <mcp_configuration>
@@ -53,7 +53,7 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
 
 **MCP Server (need to be set up in bob global mcp setting)**:
 - **Atlassian Jira MCP** — Bob fetches user stories and posts completion comments
-  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the lab in the global mcp settings.
+  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the Lab in the global mcp settings.
   - Open your Bob IDE and navigate to 'Bob - Settings' option at the bottom of the IDE and click on it.
   - ![img_2.png](screenshots/img_2.png)
   - Click on MCP and open the global mcp setting
@@ -332,7 +332,7 @@ Modernize the Pharmacy App from Java 8 / WebSphere Liberty to Java 21 / Liberty 
 ```text
 User story
 
-Modernize the Pharmacy application in lab2/snapB-java-upgrade to run on Java 21 and a compatible Liberty runtime with Jakarta EE 8 with the minimum code and configuration changes required to preserve existing behavior and get the application compiling, testing, packaging, and starting successfully.
+Modernize the Pharmacy application in Lab2/snapB-java-upgrade to run on Java 21 and a compatible Liberty runtime with Jakarta EE 8 with the minimum code and configuration changes required to preserve existing behavior and get the application compiling, testing, packaging, and starting successfully.
 
 Context
 
@@ -490,7 +490,7 @@ Now you should see the ticket on your `Board` page. If you do, you have successf
 - At the bottom of the Bob chat pane, you'll see the current mode (e.g., "💻 Code" or "❓ Ask"). Click on the current mode name at the bottom of the chat.
 - You should see a "Smart SDLC" option now in the Bob Modes dropdown.
 - ![img_9.png](screenshots/img_9.png)
-- For ease of doing the lab you can also set all auto approvals on
+- For ease of doing the Lab you can also set all auto approvals on
   - ![img_11.png](screenshots/img_11.png)
     - ## Auto-Approval Settings
       Here are some of the setting how can control what Bob does automatically:
@@ -530,7 +530,7 @@ Java Modernization is the process of upgrading legacy Java applications to moder
 
 #### About This Lab
 
-In this lab, you'll use IBM Bob's **Java Modernization mode** to modernize a legacy pharmacy management application. The application currently runs on:
+In this Lab, you'll use IBM Bob's **Java Modernization mode** to modernize a legacy pharmacy management application. The application currently runs on:
 - **Java Version**: 8
 You'll modernize it to:
 - **Java Version**: 21
@@ -607,7 +607,7 @@ Restart Bob IDE after the package install
 
 ## Conclusion
 
-Congratulations! You've completed the Java Modernization lab. You should now be able to:
+Congratulations! You've completed the Java Modernization Lab. You should now be able to:
 
 ✅ Set up mcp-servers
 ✅ Set up and use Bob's Custom Modes
