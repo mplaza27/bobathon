@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "sonarqube": {
+      "url": "https://sonarqube-mcp-sonarqube.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/sse",
+      "transport": "sse",
+      "headers": {
+        "X-API-Key": "YOUR_SONARQUBE_MCP_API_KEY"
+      }
+    },
+    "jira": {
+      "url": "https://jira-mcp-sonarqube.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/sse",
+      "transport": "sse",
+      "headers": {
+        "X-API-Key": "YOUR_JIRA_MCP_API_KEY"
+      }
+    },
+    "ocp": {
+      "url": "https://ocp-mcp-sonarqube.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/sse",
+      "transport": "sse",
+      "headers": {
+        "X-API-Key": "YOUR_OCP_MCP_API_KEY"
+      }
+    }
+  }
+}

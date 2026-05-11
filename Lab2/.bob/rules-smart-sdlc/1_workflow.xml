@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Smart_sdlc_workflow>
+  <mode_overview>
+    The Smart SDLC mode automates software development lifecycle tasks by integrating with Jira
+    to fetch user stories and implementing the required changes. This mode handles the complete
+    workflow from reading requirements to implementing and validating code changes.
+  </mode_overview>
+
+  <initialization_steps>
+    <step number="1">
+      <title>Understand User Request</title>
+      <action>Parse the user's input to identify the task type</action>
+      <details>
+        Determine if the user wants to:
+        - Work on a specific Jira issue (e.g., SCRUM)
+        - List available issues from the board
+        - Implement a feature from a user story
+        - Run code quality analysis
+        - Trigger an automated OpenShift deployment if the story explicitly requires it
+      </details>
+    </step>
+
+    <step number="2">
+      <title>Fetch Jira User Story</title>
+      <action>Use MCP tools to retrieve the user story from Jira</action>
+      <details>
+        - Connect to Jira using the configured MCP server
+        - Fetch issue details including:
+          * Summary and description
+          * Acceptance criteria
+          * Story points and priority
+          * Current status
+          * Comments and attachments
+        - Parse the requirements into actionable tasks
+        - Extract any explicit deployment directive and exact target namespace
+      </details>
+      <mcp_configuration>
+        Project: VM Projects (https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1)
+        Base URL: https://ce-squad-7.atlassian.net/
+        Email: <instructor or participant email id>
+      </mcp_configuration>
+    </step>
+
+    <step number="3">
+      <title>Analyze Current Codebase</title>
+      <action>Examine the existing code structure and identify affected components</action>
+      <tools>
+        <tool>list_files - Understand project structure</tool>
+        <tool>search_files - Find relevant code patterns</tool>
+        <tool>read_file - Examine specific implementations</tool>
+        <tool>list_code_definition_names - Get overview of code definitions</tool>
+      </tools>
+      <focus_areas>
+        - Identify files that need modification
+        - Understand current implementation patterns
+        - Locate dependencies and related components
+        - Review existing tests
+      </focus_areas>
+    </step>
+  </initialization_steps>
+
+  <main_workflow>
+    <phase name="requirements_analysis">
+      <description>Analyze user story requirements and plan implementation</description>
+      <steps>
+        <step>Extract acceptance criteria from Jira story</step>
+        <step>Identify technical requirements and constraints</step>
+        <step>Map requirements to code changes needed</step>
+        <step>Plan implementation approach</step>
+        <step>Identify potential risks or blockers</step>
+      </steps>
+      <output>
+        Clear understanding of what needs to be implemented and how
+      </output>
+    </phase>
+
+    <phase name="code_analysis">
+      <description>Analyze existing codebase to understand current state</description>
+      <steps>
+        <step>Locate relevant source files</step>
+        <step>Review current implementation patterns</step>
+        <step>Identify code that needs modification</step>
+        <step>Check for existing tests</step>
+        <step>Understand dependencies and impacts</step>
+      </steps>
+      <tools_to_use>
+        - search_files for finding relevant code
+        - read_file for detailed examination
+        - list_code_definition_names for structure overview
+      </tools_to_use>
+    </phase>
+
+    <phase name="implementation">
+      <description>Implement the required changes based on user story</description>
+      <steps>
+        <step>Create or modify necessary files</step>
+        <step>Follow Java best practices and coding standards</step>
+        <step>Ensure backward compatibility where needed</step>
+        <step>Add appropriate error handling</step>
+        <step>Update or create unit tests</step>
+        <step>Add inline documentation and comments</step>
+      </steps>
+      <best_practices>
+        - Use apply_diff for targeted changes to existing files
+        - Use write_to_file for new files or complete rewrites
+        - Make incremental changes and validate each step
+        - Follow existing code patterns and conventions
+        - Ensure changes align with acceptance criteria
+      </best_practices>
+    </phase>
+
+    <phase name="testing">
+      <description>Validate implementation meets requirements</description>
+      <steps>
+        <step>Run existing unit tests</step>
+        <step>Create new tests for new functionality</step>
+        <step>Verify acceptance criteria are met</step>
+        <step>Check for regressions</step>
+        <step>Test edge cases and error scenarios</step>
+      </steps>
+      <commands>
+        - mvn test (for Maven projects)
+        - mvn clean install (for full build)
+        - mvn verify (for integration tests)
+      </commands>
+    </phase>
+
+    <phase name="quality_analysis">
+      <description>Run code quality checks</description>
+      <steps>
+        <step>Run code analysis</step>
+        <step>Review quality metrics and issues</step>
+        <step>Address critical and major issues</step>
+        <step>Ensure code meets quality gates and security vulnerabilities</step>
+        <step>Provide a code Maintainability Rating for the files</step>
+      </steps>
+      <focus_areas>
+        - Code smells and technical debt
+        - Security vulnerabilities
+        - Code coverage
+        - Duplications
+        - Maintainability rating
+      </focus_areas>
+    </phase>
+
+    <phase name="deployment">
+      <description>Deploy and Launch the modified application or website on the local machine</description>
+      <steps>
+        <step>Confirm the acceptance criteria</step>
+        <step>Verify the namespace is allowed by the OpenShift MCP server</step>
+        <step>Generate deployment assets such as a Dockerfile, `.dockerignore` if they are required for the modernized application</step>
+        <step>Run deployment checks using IBM Bob's integrated browser</step>
+        <step>Open the application or website once the deployment tests run without any errors</step>
+      </steps>
+    </phase>
+
+    <phase name="documentation">
+      <description>Document changes and update Jira</description>
+      <steps>
+        <step>Document implementation decisions</step>
+        <step>Update README if needed</step>
+        <step>Add comments to complex code sections</step>
+        <step>Prepare summary of changes</step>
+        <step>Update Jira issue with progress/completion and deployment status</step>
+      </steps>
+    </phase>
+  </main_workflow>
+
+  <autonomous_execution>
+    <rule>Execute ALL phases of the workflow autonomously without stopping between phases.
+      Do NOT pause at the end of a phase to display a "Next Steps" list and wait for the
+      user to prompt you to continue. Listing next steps instead of executing them is a
+      workflow failure, not a progress update.</rule>
+    <rule>NEVER output a "Next Steps" list such as:
+      - Generate Dockerfile and OpenShift manifests
+      - Update Jira
+      and then stop. These are your tasks — execute them immediately.</rule>
+    <rule>The only valid reasons to pause and wait for user input are:
+      1. A required value is genuinely unknown (e.g. the user has not told you their story key)
+      2. An MCP tool call returned an authorization error that requires human intervention
+      3. You need explicit confirmation for a destructive or irreversible action
+      Any other pause is forbidden.</rule>
+    <rule>Progress updates ARE allowed — brief inline status messages like "Running code
+      analysis..." or "Pushing to git..." are fine. The difference is that you
+      continue executing immediately after the message. You do not stop and wait.</rule>
+    <rule>The workflow is complete only when ALL of the following are done:
+      - Code is 100% sompleted
+      - Tests pass
+      - Code analysis is completed and reported
+      - If deployment is required: build triggered is triggered, deployment verified, and application or website is launched
+      - Jira ticket updated with a completion comment and transitioned to Done
+      Reaching any earlier phase and stopping is NOT completion.</rule>
+  </autonomous_execution>
+
+  <completion_criteria>
+    <criterion>All acceptance criteria from user story are met</criterion>
+    <criterion>Code follows project conventions and best practices</criterion>
+    <criterion>Unit tests pass successfully</criterion>
+    <criterion>Changes are properly documented</criterion>
+    <criterion>No breaking changes introduced</criterion>
+    <criterion>Jira issue is updated with implementation status</criterion>
+    <criterion>If deployment is explicitly required, deployment steps are outlined and followed till application or website launch</criterion>
+  </completion_criteria>
+
+  <error_handling>
+    <scenario type="jira_connection_failed">
+      <action>Verify MCP server configuration</action>
+      <action>Check network connectivity</action>
+      <action>Validate API token and credentials</action>
+      <fallback>Ask user to provide issue details manually</fallback>
+    </scenario>
+
+    <scenario type="build_failure">
+      <action>Review error messages carefully</action>
+      <action>Check for missing dependencies</action>
+      <action>Verify Java version compatibility</action>
+      <action>Fix compilation errors incrementally</action>
+    </scenario>
+
+    <scenario type="test_failure">
+      <action>Analyze failing test output</action>
+      <action>Review changes that might have caused failure</action>
+      <action>Fix implementation or update tests as needed</action>
+      <action>Ensure all tests pass before completion</action>
+    </scenario>
+
+    <scenario type="quality_issues">
+      <action>Review reported issues by severity</action>
+      <action>Address critical and major issues first</action>
+      <action>Refactor code to meet quality standards</action>
+      <action>Re-run analysis to verify fixes</action>
+    </scenario>
+
+    <scenario type="deployment_failure">
+      <action>Report that the deplyment failed and list the steps that lead to the failure.</action>
+      <action>Modify the code to enable local machine run of the application or website and rerun the steps to ensure successful deployment</action>
+      <action>Stop before marking the Jira story done and include the authorization failure in the Jira update.</action>
+    </scenario>
+  </error_handling>
+
+  <communication_guidelines>
+    <guideline>
+      Always start by confirming which Jira issue you're working on
+    </guideline>
+    <guideline>
+      Provide clear updates on progress through each phase
+    </guideline>
+    <guideline>
+      Explain technical decisions and trade-offs
+    </guideline>
+    <guideline>
+      Report any blockers or issues immediately
+    </guideline>
+    <guideline>
+      Summarize changes and how they meet acceptance criteria
+    </guideline>
+  </communication_guidelines>
+</Smart_sdlc_workflow>

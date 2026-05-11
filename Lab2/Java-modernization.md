@@ -1,56 +1,41 @@
 # IBM Bob Lab — Java Modernization Lab Guide
 
-
-# Lab 1: Bob Fundamentals
-
-**Duration:** 45 minutes  
-**Objective:** Learn to use Bob as an AI-powered Java Modernization Expert.
-
-## Learning Objectives
-
-By completing this lab, you will be able to:
-- Connect MCP servers to Bob IDE
-- Create and Understand Bob custom modes
-- See Bob understand and build off of a natural language userstory
-- Make code modifications with AI assistance
-- Create comprehensive documentation automatically
-
 ## Prerequisites
 
 - IBM Bob IDE
-  - Ensure you have IBM Bob latest version installed
-  - Login through Bob to get connected
+  - Ensure you have IBM Bob latest version installed
+  - Login through Bob to get connected
 
 - Atlassian account with Jira project access
-  - The instructor should set up a free atlassian jira account here - https://www.atlassian.com/software/jira
-  - Use your gmail id or any other id since IBM id will require adding you to IBM account and it would be difficult to add the bootcamp participants to it.
-  - Continue to create your org space with atlassian.net domain and note it - eg: https://ce-squad-7.atlassian.net/
-  - Create a new space in your jira dashboard. Click on the '+' sign next to the "Spaces" option on the left navigation options.
+  - The instructor should set up a free atlassian jira account here - https://www.atlassian.com/software/jira
+  - Use your gmail id or any other id since IBM id will require adding you to IBM account and it would be difficult to add the bootcamp participants to it.
+  - Continue to create your org space with atlassian.net domain and note it - eg: https://ce-squad-7.atlassian.net/
+  - Create a new space in your jira dashboard. Click on the '+' sign next to the "Spaces" option on the left navigation options.
 
 ![screenshots/image.png](screenshots/image.png)
-  - Start with a Scrum or a Kanban board. Click on Scrum option and click on use template.
+  - Start with a Scrum or a Kanban board. Click on Scrum option and click on use template.
 
 ![img1.png](screenshots/img1.png)
 
-  - Add your board name, for space managed chose team managed option, for access choose limited and add the Key. This key is important since this acts as the tag for all stories you create in the board and how Bob would access the stories. For us the key is "SCRUM"
+  - Add your board name, for space managed chose team managed option, for access choose limited and add the Key. This key is important since this acts as the tag for all stories you create in the board and how Bob would access the stories. For us the key is "SCRUM"
 
 ![img2.png](screenshots/img2.png)
 
-  - On the next page you should be able to add all the members to the board
-  - Now you can start creating user stories on the board. Note the url of the board. You will need to add this to the custom mode docs to ensure the Smart SDLC mode accesses the correct user stories for all users. You only need To Do, In Progress and Done for this lab.
+  - On the next page you should be able to add all the members to the board
+  - Now you can start creating user stories on the board. Note the url of the board. You will need to add this to the custom mode docs to ensure the Smart SDLC mode accesses the correct user stories for all users. You only need To Do, In Progress and Done for this lab.
 
 ![img.png](screenshots/img.png)
 
 - Custom mode updates (this can also be done by the participants)
-  - Modify the custom mode lab with the jira board information. This can also be done via the env file and by prompting bob to use the jira board details from the env file. But for this lab we would be hard coding the board details in the rules of the custom mode.
-  - In the .bob/rules-smart-sdlc/1_workflow.xml file, search for the **Fetch Jira User Story** block. For the mcp configuration section add the following details:
-    ```bash
-    <mcp_configuration>
-        Project: <Your project or space name - Eg.: VM Projects> (< link to your scrum or kanban board eg: https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1>)
-        Base URL: <Your atlassian.net url eg - https://ce-squad-7.atlassian.net/>
-        Email: <instructor or participant email id>
-      </mcp_configuration>
-    ```
+  - Modify the custom mode lab with the jira board information. This can also be done via the env file and by prompting bob to use the jira board details from the env file. But for this lab we would be hard coding the board details in the rules of the custom mode.
+  - In the .bob/rules-smart-sdlc/1_workflow.xml file, search for the **Fetch Jira User Story** block. For the mcp configuration section add the following details:
+    ```bash
+    <mcp_configuration>
+        Project: <Your project or space name - Eg.: VM Projects> (< link to your scrum or kanban board eg: https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1>)
+        Base URL: <Your atlassian.net url eg - https://ce-squad-7.atlassian.net/>
+        Email: <instructor or participant email id>
+      </mcp_configuration>
+    ```
 ---
 # For Bootcamp Participants:
 
@@ -68,82 +53,82 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
 
 **MCP Server (need to be set up in bob global mcp setting)**:
 - **Atlassian Jira MCP** — Bob fetches user stories and posts completion comments
-  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the lab in the global mcp settings.
-  - Open your Bob IDE and navigate to 'Bob - Settings' option at the bottom of the IDE and click on it.
-  - ![img_2.png](screenshots/img_2.png)
-  - Click on MCP and open the global mcp setting
-  - ![img_3.png](screenshots/img_3.png)
-  - Copy the following MCP server connection details as a new mcp in the json file that opens: (you can remove the disabled tools section, we only added it to restrict scope of the mcp server)
-  ```bash
-          "mcp-atlassian": {
-            "command": "uvx",
-            "args": [
-                "mcp-atlassian"
-            ],
-            "env": {
-                "JIRA_URL": "<your atlassian.net url> eg: https://ce-squad-7.atlassian.net",
-                "JIRA_USERNAME": "<your email id>",
-                "JIRA_API_TOKEN": "<your atlassian token>",
-                "CONFLUENCE_URL": "",
-                "CONFLUENCE_USERNAME": "",
-                "CONFLUENCE_API_TOKEN": ""
-            },
-            "timeout": 300,
-            "alwaysAllow": [
-                "jira_get_board_issues",
-                "jira_get_issue",
-                "jira_add_comment",
-                "jira_transition_issue",
-                "jira_get_transitions"
-            ],
-            "disabledTools": [
-                "jira_get_issue_watchers",
-                "jira_add_watcher",
-                "jira_remove_watcher",
-                "jira_search",
-                "jira_search_fields",
-                "jira_get_field_options",
-                "jira_get_project_issues",
-                "jira_get_worklog",
-                "jira_download_attachments",
-                "jira_get_issue_images",
-                "jira_get_agile_boards",
-                "jira_get_sprints_from_board",
-                "jira_get_sprint_issues",
-                "jira_get_link_types",
-                "jira_create_issue",
-                "jira_batch_create_issues",
-                "jira_batch_get_changelogs",
-                "jira_delete_issue",
-                "jira_edit_comment",
-                "jira_add_worklog",
-                "jira_link_to_epic",
-                "jira_create_issue_link",
-                "jira_create_remote_issue_link",
-                "jira_remove_issue_link",
-                "jira_create_sprint",
-                "jira_update_sprint",
-                "jira_add_issues_to_sprint",
-                "jira_get_project_components",
-                "jira_get_all_projects",
-                "jira_get_project_versions",
-                "jira_get_service_desk_for_project",
-                "jira_get_service_desk_queues",
-                "jira_get_queue_issues",
-                "jira_create_version",
-                "jira_batch_create_versions",
-                "jira_get_issue_proforma_forms",
-                "jira_get_proforma_form_details",
-                "jira_update_proforma_form_answers",
-                "jira_get_issue_dates",
-                "jira_get_issue_sla",
-                "jira_get_issue_development_info",
-                "jira_get_issues_development_info"
-            ]
-        }
-  ```
-    -  Once added refresh all icon next to the 'All' dropdown to refresh the servers on the Bob - Settings MCP main page (where you clicked on Open for the json) just to ensure bob connects successfully. You can ignore this step if you already see the server in your mcp list with a green dot.
-    - ![img_4.png](screenshots/img_4.png)
+  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the lab in the global mcp settings.
+  - Open your Bob IDE and navigate to 'Bob - Settings' option at the bottom of the IDE and click on it.
+  - ![img_2.png](screenshots/img_2.png)
+  - Click on MCP and open the global mcp setting
+  - ![img_3.png](screenshots/img_3.png)
+  - Copy the following MCP server connection details as a new mcp in the json file that opens: (you can remove the disabled tools section, we only added it to restrict scope of the mcp server)
+  ```bash
+          "mcp-atlassian": {
+            "command": "uvx",
+            "args": [
+                "mcp-atlassian"
+            ],
+            "env": {
+                "JIRA_URL": "<your atlassian.net url> eg: https://ce-squad-7.atlassian.net",
+                "JIRA_USERNAME": "<your email id>",
+                "JIRA_API_TOKEN": "<your atlassian token>",
+                "CONFLUENCE_URL": "",
+                "CONFLUENCE_USERNAME": "",
+                "CONFLUENCE_API_TOKEN": ""
+            },
+            "timeout": 300,
+            "alwaysAllow": [
+                "jira_get_board_issues",
+                "jira_get_issue",
+                "jira_add_comment",
+                "jira_transition_issue",
+                "jira_get_transitions"
+            ],
+            "disabledTools": [
+                "jira_get_issue_watchers",
+                "jira_add_watcher",
+                "jira_remove_watcher",
+                "jira_search",
+                "jira_search_fields",
+                "jira_get_field_options",
+                "jira_get_project_issues",
+                "jira_get_worklog",
+                "jira_download_attachments",
+                "jira_get_issue_images",
+                "jira_get_agile_boards",
+                "jira_get_sprints_from_board",
+                "jira_get_sprint_issues",
+                "jira_get_link_types",
+                "jira_create_issue",
+                "jira_batch_create_issues",
+                "jira_batch_get_changelogs",
+                "jira_delete_issue",
+                "jira_edit_comment",
+                "jira_add_worklog",
+                "jira_link_to_epic",
+                "jira_create_issue_link",
+                "jira_create_remote_issue_link",
+                "jira_remove_issue_link",
+                "jira_create_sprint",
+                "jira_update_sprint",
+                "jira_add_issues_to_sprint",
+                "jira_get_project_components",
+                "jira_get_all_projects",
+                "jira_get_project_versions",
+                "jira_get_service_desk_for_project",
+                "jira_get_service_desk_queues",
+                "jira_get_queue_issues",
+                "jira_create_version",
+                "jira_batch_create_versions",
+                "jira_get_issue_proforma_forms",
+                "jira_get_proforma_form_details",
+                "jira_update_proforma_form_answers",
+                "jira_get_issue_dates",
+                "jira_get_issue_sla",
+                "jira_get_issue_development_info",
+                "jira_get_issues_development_info"
+            ]
+        }
+  ```
+    -  Once added refresh all icon next to the 'All' dropdown to refresh the servers on the Bob - Settings MCP main page (where you clicked on Open for the json) just to ensure bob connects successfully. You can ignore this step if you already see the server in your mcp list with a green dot.
+    - ![img_4.png](screenshots/img_4.png)
 
 
 ## Step 3: Setup Java
@@ -325,18 +310,20 @@ When you run `mvn --version`, it shows the Java version that Maven will use to b
 ## Step 4: Set Up Jira User Stories
 Every participant needs a Jira User Story to work with. Here is the story that needs to be added to the board in the TO-DO list. This is a basic modernization request, feel free to add more details or functionality request to this if you want to experiment more.:
 
-To add a Jira Ticket/Task go to the following board - https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1
+To add a Jira Ticket go to the following board - https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1
 
 Click on '+Create' on either the top of the board or on the bottom of the "TO-DO" list
 
 ![jira_create](./screenshots/jira_create.png)
 
-Start by adding the following `Summary` and `Description` to the ticket and press `Create`.
+Start by adding the following title to the ticket and press "Enter".
 
 `Summary`:
 ```
 Modernize the Pharmacy App from Java 8 / WebSphere Liberty to Java 21 / Liberty with Jakarta EE 8 and Struts 2
 ```
+
+Once you see the ticket, click on it and add the following to the description section.
 
 `Description`:
 ```text
@@ -377,13 +364,13 @@ Preserve existing getters, setters, constructors, and public method signatures u
 3. Required validation only
 The story is complete when the following pass:
 
-    mvn clean test
+    mvn clean test
 
-    mvn clean package
+    mvn clean package
 
-    mvn liberty:run or ./run-liberty.sh
+    mvn liberty:run or ./run-liberty.sh
 
-    browser verification of dashboard, medicine list, prescription list, and order list pages
+    browser verification of dashboard, medicine list, prescription list, and order list pages
 
 4. Required targeted test suite
 Create or maintain only the following targeted tests in this story:
@@ -424,17 +411,17 @@ Move the story to In Progress before starting.
 
 Add comments summarizing:
 
-    - dependency/runtime changes
+    - dependency/runtime changes
 
-    - whether ports changed
+    - whether ports changed
 
-    - build result
+    - build result
 
-    - test result
+    - test result
 
-    - page verification result for dashboard, medicines, prescriptions, and orders
+    - page verification result for dashboard, medicines, prescriptions, and orders
 
-    - total time taken
+    - total time taken
 
 Move the story to Done only after all required checks pass.
 ```
@@ -442,15 +429,15 @@ Move the story to Done only after all required checks pass.
 ![jira_fill_out](./screenshots/jira_fill_out.png)
 
 
-Once you click `Create`, there should be a pop up for the task/ticket. When the pop up shows up, click on the task/ticket name.
+Once you click `Create`, there should be a pop up for the ticket. When the pop up shows up, click on the ticket name.
 
 ![jira_view_ticket](./screenshots/jira_view_ticket.png)
 
-Then assign the task/ticket to yourself and close out of the task/ticket screen. 
+Then assign the ticket to yourself and close out of the ticket screen. 
 
 ![jira_ticket_screen](./screenshots/jira_ticket_screen.png)
 
-Now we have to create a sprint and assign the task/ticket to the sprint.
+Now we have to create a sprint and assign the ticket to the sprint.
 
 First, create a sprint by navigating to `Backlog` and clicking on `Create sprint`:
 
@@ -480,25 +467,25 @@ Now you should see the ticket on your `Board` page. If you do, you have successf
 - In the project folder, you should see a .bob folder.
 - In the .bob/rules-smart-sdlc/1_workflow.xml file, search for the **Fetch Jira User Story** block. For the mcp configuration section add or verify the following details (depending on what you instructor has mentioned):
 ```bash
-    <mcp_configuration>
-          Project: Your project or space name - Eg.: VM Projects (link to your scrum or kanban board eg: https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1)
-          Base URL: Your atlassian.net url eg - https://ce-squad-7.atlassian.net/
-          Email: instructor or participant email id
-    </mcp_configuration>
+    <mcp_configuration>
+          Project: Your project or space name - Eg.: VM Projects (link to your scrum or kanban board eg: https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1)
+          Base URL: Your atlassian.net url eg - https://ce-squad-7.atlassian.net/
+          Email: instructor or participant email id
+    </mcp_configuration>
 ```
 - Save the file and open the bob chat interface.
 - At the bottom of the Bob chat pane, you'll see the current mode (e.g., "💻 Code" or "❓ Ask"). Click on the current mode name at the bottom of the chat.
 - You should see a "Smart SDLC" option now in the Bob Modes dropdown.
 - ![img_9.png](screenshots/img_9.png)
 - For ease of doing the lab you can also set all auto approvals on
-  - ![img_11.png](screenshots/img_11.png)
-    - ## Auto-Approval Settings
-      Here are some of the setting how can control what Bob does automatically:
-          - **Read**: Let Bob read files without asking
-          - **Write**: Let Bob modify files without asking
-          - **Execute**: Let Bob run commands without asking
-          - **Todo**: Let Bob create task lists without asking
-          - **MCP**: Let's Bob access and connect to MCP servers automatically without asking.
+  - ![img_11.png](screenshots/img_11.png)
+    - ## Auto-Approval Settings
+      Here are some of the setting how can control what Bob does automatically:
+          - **Read**: Let Bob read files without asking
+          - **Write**: Let Bob modify files without asking
+          - **Execute**: Let Bob run commands without asking
+          - **Todo**: Let Bob create task lists without asking
+          - **MCP**: Let's Bob access and connect to MCP servers automatically without asking.
 - You can also check the custom mode details on the Bob Settings page by navigating to the Modes tab
 - ![img_10.png](screenshots/img_10.png)
 - Now that you have your mode and mcp setup. Let's confirm if Bob can actually connect to the Jira Board. Switch to Advanced or Code mode and ask the following:
@@ -555,22 +542,22 @@ Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement 
 ### Optional: Initiate the built-in Java Modernization workflow without interaction with Jira User Story
 Have Bob use the Java Modernization workflow to analyze your current application, use a migration plan to upgrade the application, and validate the application post-upgrade.
 1. **Start the Workflow**
-   * In the Bob chat window, you will see the Java Modernization workflow under Workflows. Select the Start button on the workflow to have Bob begin the Java modernization flow.
+   * In the Bob chat window, you will see the Java Modernization workflow under Workflows. Select the Start button on the workflow to have Bob begin the Java modernization flow.
 2. **Analyze**
-   * **1.1 Analyze Java Project**
-      Ensure that the Project Path that Bob populates in your current project directory and select **Analyze Project**.
-   * **1.2 Select Java modernization type**
-      Select **Java Upgrade** for modernization type. Toggle **Git Flow** off.
+   * **1.1 Analyze Java Project**
+      Ensure that the Project Path that Bob populates in your current project directory and select **Analyze Project**.
+   * **1.2 Select Java modernization type**
+      Select **Java Upgrade** for modernization type. Toggle **Git Flow** off.
 3. **Upgrade**
-   a. **Java Upgrade**
-   * **2.1 Run Java upgrade recipes**
-      Select your **Java 21** as your target. Toggle Jakarta EE 8 migration option off and click **Run Recipes**.
+   a. **Java Upgrade**
+   * **2.1 Run Java upgrade recipes**
+      Select your **Java 21** as your target. Toggle Jakarta EE 8 migration option off and click **Run Recipes**.
 * **2.2 Perform agentic upgrade**
-   Bob will proceed with the upgrade task involving several subtasks. Bob will create to do list(s) and complete tasks agentically, while also allowing user intervention and approvals.
+   Bob will proceed with the upgrade task involving several subtasks. Bob will create to do list(s) and complete tasks agentically, while also allowing user intervention and approvals.
 4**Validate**
-   Select the option for Bob to Validate your application
+   Select the option for Bob to Validate your application
 5**Run the application**
-   Prompt Bob to run the Simple Pharmacy application. Follow the URL the Bob provide to view the UI of the local application.
+   Prompt Bob to run the Simple Pharmacy application. Follow the URL the Bob provide to view the UI of the local application.
 ---
 
 
@@ -614,3 +601,6 @@ Congratulations! You've completed the Java Modernization lab. You should now be 
 ✅ Use Bob to analyze and upgrade the Pharmacy application and validate its java modernization
 
 ---
+
+
+

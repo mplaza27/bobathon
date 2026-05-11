@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ocp_deployment_guide>
+  <overview>
+    This guide defines when and how the DISH SDLC mode may use the OpenShift MCP server
+    for automated deployment.
+  </overview>
+
+  <mcp_server_config>
+    <server_name>ocp</server_name>
+    <transport>sse</transport>
+    <note>
+      Authentication to the OpenShift MCP server is handled by the API key configured in
+      the local `.bob/mcp.json` file. Bob must never load this from `.env`.
+    </note>
+  </mcp_server_config>
+
+  <deployment_trigger>
+    <required_acceptance_criteria>
+      <criterion>Automated deployment required after SonarQube quality gate passes</criterion>
+      <criterion>Target OpenShift namespace: &lt;namespace&gt;</criterion>
+    </required_acceptance_criteria>
+    <rule>Do not infer deployment intent from vague language.</rule>
+    <rule>Do not guess the namespace.</rule>
+  </deployment_trigger>
+
+  <guardrails>
+    <rule>Deploy only after local tests/build validation succeeds.</rule>
+    <rule>Deploy only after the SonarQube quality gate passes.</rule>
+    <rule>Deploy only to a namespace returned by the OpenShift MCP server allowlist.</rule>
+    <rule>Use only safe, namespaced manifests and approved BuildConfig-based flows.</rule>
+    <rule>Prefer Git-source BuildConfig flows. Do NOT use binary build upload of any kind — it is unreliable for large Maven projects due to file upload size and timeout constraints.</rule>
+    <rule>Never use Java preview features anywhere — not in Java source code, not in pom.xml compilerArgs, and not in the Dockerfile CMD/ENTRYPOINT. The application must start with a plain `java -jar` without --enable-preview. A standard OCP runtime image does not enable preview features and the app will fail to start if any preview feature is used.</rule>
+    <rule>Do not assume `curl` or other debugging tools exist in the runtime image for health checks unless they are explicitly installed.</rule>
+    <rule>Keep Dockerfile runtime port, Service targetPort, Route targetPort, and application server port aligned.</rule>
+    <rule>Before triggering a build, push all modernized source code and the generated Dockerfile to the participant's Gitea repository using git push. The build will fetch source from Gitea — not from the local filesystem.</rule>
+    <rule>Never use the `oc` CLI for any step. Use only MCP server tools (ocp.*) and git CLI commands.</rule>
+    <rule>Use ocp.start_build to trigger the Git-source build via the OpenShift API. Do not use oc start-build.</rule>
+    <rule>If OCP MCP RBAC or namespace authorization fails, stop and report the failure instead of falling back to local cluster commands.</rule>
+    <rule>If deployment verification fails, update Jira with the failure and stop before marking the story done.</rule>
+    <rule>A Deployment manifest must define exactly ONE container in spec.template.spec.containers — the application container.
+      Never generate or apply a Deployment that has more than one container unless a sidecar is explicitly required.
+      Reason: applying a new Deployment manifest on top of an existing one that had a differently-named container (e.g. old name
+      was "ecommerce-app", new name is "app") results in both containers being present in the pod. Both try to bind the same port
+      and the app fails with "Port 8080 already in use".
+      Before applying a Deployment manifest, check the existing container names with ocp.get_resource and ensure the new manifest
+      uses the same container name OR replaces the containers array entirely with a single entry.</rule>
+    <rule>STALE DEPLOYMENT CLEANUP: Before applying any new Deployment, use ocp.delete_resource to remove any
+      existing Deployment in the namespace that has a different name than the one being deployed. Wait for the
+      old pods to terminate before applying the new manifest. This prevents two pods from competing for port 8080
+      on the same node, which causes CrashLoopBackOff in the new pod.</rule>
+    <rule>BUILDCONFIG GITEA SECRET: Every BuildConfig manifest MUST include spec.source.sourceSecret.name pointing
+      to the pre-existing gitea secret in the namespace. Never omit this field. Never attempt to create a Secret
+      resource — RBAC does not permit it. Discover the secret name by inspecting existing Secrets in the namespace
+      before writing the BuildConfig manifest.</rule>
+    <rule>APPLICATION URLS IN SUMMARY: After ocp.get_route succeeds, ALWAYS include the following URLs in both
+      the Bob chat summary AND the Jira completion comment, regardless of any earlier warnings:
+        - Main:      https://&lt;route-host&gt;
+        - Swagger UI: https://&lt;route-host&gt;/swagger-ui/index.html
+        - Health:    https://&lt;route-host&gt;/actuator/health
+      If ocp.get_route fails, explicitly state "Route not yet available — check OCP console" in the summary.
+      Never silently omit URLs.</rule>
+  </guardrails>
+
+  <recommended_tool_sequence>
+    <step>ocp.list_allowed_namespaces — verify the target namespace is in the allowlist before proceeding</step>
+    <step>Generate or update the application Dockerfile in `lab1/modernized-ecommerce-app/Dockerfile`</step>
+    <step>Generate or update `lab1/modernized-ecommerce-app/settings.xml` with Nexus mirror config (see maven_nexus_mirror section). This file MUST exist before the git commit step.</step>
+
+    <!-- CLEANUP: Remove stale Deployments BEFORE generating new manifests -->
+    <step>CLEANUP — Before generating or applying any Deployment manifest, list all existing Deployments in the
+      namespace using ocp.get_resource. If ANY Deployment exists whose name differs from the one you are about to
+      apply (e.g. a generic "app" Deployment left over from a previous run), delete it first using ocp.delete_resource.
+      Only ONE Deployment should exist in the namespace when you apply the new one.
+      Reason: Kubernetes merges Deployment patches by container name. If two Deployments in the same namespace both
+      schedule pods that bind port 8080, the node sees a port conflict and the newer pod enters CrashLoopBackOff.
+      Deleting the stale Deployment removes its pods cleanly before the new rollout begins.</step>
+
+    <!-- GITEA SECRET: Discover and reference — never create -->
+    <step>GITEA SECRET — Before writing the BuildConfig manifest, discover the pre-existing Gitea source secret
+      in the namespace by calling ocp.get_resource for Secrets and finding the one whose name matches the pattern
+      `gitea*` or `lab-gitea*`. Use that secret name as the value of spec.source.sourceSecret.name in the BuildConfig.
+      NEVER attempt to create a Secret. NEVER omit sourceSecret from the BuildConfig.
+      If no gitea secret is found in the namespace, stop and report: "No Gitea source secret found in namespace
+      &lt;namespace&gt;. Ask the lab instructor to create it before retrying." Do not proceed with the build.</step>
+
+    <step>Generate or update OpenShift manifests (Deployment, Service, Route, ImageStream, BuildConfig).
+      The BuildConfig MUST include spec.source.sourceSecret.name set to the secret discovered above.</step>
+    <step>Read `.bob/gitea.json` to obtain the Gitea baseUrl, username, and token. Construct the authenticated remote URL as: https://&lt;username&gt;:&lt;token&gt;@&lt;baseUrl-host&gt;/&lt;org&gt;/&lt;repo&gt;.git. Use this URL only for the push — do not persist it to `.git/config`.</step>
+    <step>Run pre_commit_checklist verifications, then git add + git commit + git push &lt;authenticated-url&gt;</step>
+    <step>ocp.apply_manifest_bundle — apply the ImageStream, updated BuildConfig (with contextDir: lab1/modernized-ecommerce-app, dockerfilePath: Dockerfile, and sourceSecret), Deployment, Service, and Route into the target namespace</step>
+    <step>ocp.start_build — trigger the Git-source build via the OpenShift API (namespace + buildConfigName). OCP will clone from Gitea internally.</step>
+    <step>ocp.wait_for_build — pass the build name returned by ocp.start_build to monitor completion</step>
+    <step>ocp.restart_deployment when an image change does not automatically trigger rollout</step>
+    <step>ocp.wait_for_deployment</step>
+    <step>ocp.get_route — ALWAYS call this step even if earlier steps had warnings. Capture the full route hostname.</step>
+    <step>ocp.get_recent_events or ocp.get_pod_logs if verification fails</step>
+  </recommended_tool_sequence>
+
+  <gitea_credentials>
+    <description>
+      Bob reads `.bob/gitea.json` to obtain credentials for pushing to the participant's
+      Gitea repository. This file must be present and populated before deployment runs.
+    </description>
+    <file>.bob/gitea.json</file>
+    <fields>
+      <field name="baseUrl">Full Gitea base URL (e.g. https://gitea.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com)</field>
+      <field name="username">Participant's Gitea username (e.g. hbavaria)</field>
+      <field name="token">Participant's Gitea personal access token or password</field>
+    </fields>
+    <usage>
+      Construct the authenticated push URL as:
+        https://&lt;username&gt;:&lt;token&gt;@&lt;gitea-host&gt;/&lt;org&gt;/&lt;repo&gt;.git
+      Pass this URL directly to `git push` — do not store it in `.git/config` to avoid
+      persisting credentials on disk.
+      Example: git push https://hbavaria:mytoken@gitea.apps.example.com/lab/lab-app-hbavaria.git
+    </usage>
+    <error_handling>
+      If `.bob/gitea.json` is missing or contains placeholder values, stop and ask the
+      participant to populate `.bob/gitea.json` with their Gitea credentials before retrying.
+      Do not attempt the push without valid credentials.
+    </error_handling>
+  </gitea_credentials>
+
+  <maven_nexus_mirror>
+    <description>
+      Maven builds run inside the OCP build pod with no persistent local repository.
+      Without a Nexus mirror, every build re-downloads all dependencies from Maven Central,
+      which is slow and fails if the cluster has no direct internet access.
+      Always configure Maven to use the in-cluster Nexus proxy so dependencies are
+      cached in Nexus and served from within the cluster on subsequent builds.
+    </description>
+    <nexus_url>https://nexus.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/repository/maven-public/</nexus_url>
+    <required_steps>
+      <step>Create `lab1/modernized-ecommerce-app/settings.xml` with Nexus configured as the Maven mirror:</step>
+      <settings_xml><![CDATA[
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://nexus.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/repository/maven-public/</url>
+    </mirror>
+  </mirrors>
+</settings>
+      ]]></settings_xml>
+      <step>In the Dockerfile, COPY settings.xml before running mvn and pass it with -s:</step>
+      <dockerfile_snippet><![CDATA[
+COPY settings.xml /root/.m2/settings.xml
+RUN mvn -s /root/.m2/settings.xml clean package -DskipTests
+      ]]></dockerfile_snippet>
+    </required_steps>
+    <rules>
+      <rule>Always generate settings.xml alongside the Dockerfile. Never omit it.</rule>
+      <rule>Always use `mvn -s /root/.m2/settings.xml` in the Dockerfile RUN command. Never run plain `mvn` without -s in the OCP build context.</rule>
+      <rule>The settings.xml must use `mirrorOf: *` so ALL repositories (including Spring, JBoss, etc.) are proxied through Nexus.</rule>
+      <rule>Commit settings.xml to Gitea along with the Dockerfile so OCP can access it during the git-source build. Always verify settings.xml is included in `git status --short` before running `git push` — a missing settings.xml in Gitea will cause the OCP build to fail even if the COPY instruction in the Dockerfile is correct.</rule>
+      <rule>COPY path for settings.xml must be exactly `settings.xml` — no leading `./`, no subdirectory prefix, no absolute path.
+        Reason: the BuildConfig sets `contextDir: lab1/modernized-ecommerce-app`, which makes that directory the Docker build context root.
+        Both settings.xml and Dockerfile live in that directory, so `COPY settings.xml ...` resolves correctly.
+        Using `./settings.xml`, `/settings.xml`, or any other prefix will cause the build to fail with "file not found".</rule>
+    </rules>
+  </maven_nexus_mirror>
+
+  <manifest_label_consistency>
+    <description>
+      The `app` label MUST be identical across the Deployment (spec.selector.matchLabels,
+      spec.template.metadata.labels) and the Service (spec.selector). A mismatch means
+      the Service has no endpoints and every request returns 503 even though the pod
+      shows Running.
+    </description>
+    <rule>Choose one consistent label value for the app (e.g. the participant's repo name
+      such as `lab-app-sgovindan`) and use it in ALL three places:
+      Deployment.spec.selector.matchLabels.app,
+      Deployment.spec.template.metadata.labels.app, and
+      Service.spec.selector.app.</rule>
+    <rule>Never use a different label value in the Service selector than what is set on
+      the pod template. Always cross-check before applying the manifest bundle.</rule>
+    <correct_example><![CDATA[
+# Deployment
+spec:
+  selector:
+    matchLabels:
+      app: lab-app-sgovindan          # <-- must match Service selector
+  template:
+    metadata:
+      labels:
+        app: lab-app-sgovindan        # <-- must match Service selector
+
+# Service
+spec:
+  selector:
+    app: lab-app-sgovindan            # <-- must match Deployment labels
+    ]]></correct_example>
+    <verification>After ocp.apply_manifest_bundle, confirm the Service has at least one
+      endpoint before calling ocp.start_build. If the Service shows 0 endpoints, the
+      label selector is mismatched — fix the manifests and re-apply before proceeding.
+    </verification>
+  </manifest_label_consistency>
+
+  <pre_commit_checklist>
+    <description>
+      Before running `git add + git commit + git push` to Gitea, verify all of the following.
+      These are things Bob can reason about from the local filesystem — they do not need separate rules.
+    </description>
+    <check>Every file referenced by a COPY instruction in the Dockerfile actually exists in
+      lab1/modernized-ecommerce-app/ — check with `ls` before writing the Dockerfile.</check>
+    <check>settings.xml is present in lab1/modernized-ecommerce-app/ and appears in `git status --short`
+      as staged. A missing settings.xml in Gitea causes the OCP build to fail even if the Dockerfile is correct.</check>
+    <check>The .dockerignore does not accidentally exclude files needed by the build (pom.xml, settings.xml, src/).
+      Review every pattern and confirm it targets only artifacts (target/, surefire-reports/) not source files.</check>
+  </pre_commit_checklist>
+
+  <build_config_requirements>
+    <description>
+      When applying the BuildConfig manifest via ocp.apply_manifest_bundle, always set ALL
+      of the following fields. Missing any one of them will cause a build failure.
+    </description>
+    <field name="spec.source.contextDir">lab1/modernized-ecommerce-app</field>
+    <field name="spec.strategy.dockerStrategy.dockerfilePath">Dockerfile</field>
+    <field name="spec.source.sourceSecret.name">gitea-credentials</field>
+    <note>spec.source.sourceSecret.name is MANDATORY. The secret gitea-credentials is
+      pre-created in every participant namespace by the lab administrator. A BuildConfig
+      without it cannot clone from Gitea and the build fails with "terminal prompts
+      disabled". Never omit it. Never attempt to create the secret yourself.</note>
+    <rationale>
+      Setting contextDir scopes the Docker build context to the modernized app directory.
+      This means COPY commands inside the Dockerfile reference paths relative to
+      lab1/modernized-ecommerce-app/, not the repo root — keeping the Dockerfile simple
+      and portable. The sourceSecret is required because the Gitea repository is private
+      and OCP needs credentials to clone it.
+    </rationale>
+    <correct_example><![CDATA[
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: lab-app-hbavaria
+  namespace: lab-hbavaria
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://gitea.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/lab/lab-app-hbavaria.git
+      ref: main
+    contextDir: lab1/modernized-ecommerce-app
+    sourceSecret:
+      name: gitea-credentials     # <-- MANDATORY: pre-existing secret, never create it
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: lab-app-hbavaria:latest
+    ]]></correct_example>
+  </build_config_requirements>
+
+  <build_trigger_details>
+    <tool>ocp.start_build</tool>
+    <description>
+      Triggers a Git-source build by calling the OpenShift BuildConfig instantiate API.
+      OCP clones source directly from the configured Gitea repository — no local file upload occurs and no oc CLI is required.
+    </description>
+    <parameters>
+      <param name="namespace">Target namespace (e.g. lab-hbavaria)</param>
+      <param name="buildConfigName">Name of the BuildConfig resource (e.g. lab-app-hbavaria)</param>
+    </parameters>
+    <notes>
+      <note>Ensure git push to Gitea has completed before calling ocp.start_build, otherwise OCP will clone stale source.</note>
+      <note>The tool returns the created Build object. Extract the build name (metadata.name) to pass to ocp.wait_for_build.</note>
+      <note>After successful build and image push, continue with ocp.restart_deployment and ocp.wait_for_deployment.</note>
+      <note>Never fall back to oc CLI. If ocp.start_build fails due to RBAC or authorization, stop and report the failure.</note>
+      <note>ocp.wait_for_build has a 60-second timeout. Maven builds typically take 5-10 minutes. If wait_for_build
+        times out with MCP error -32001, do NOT treat this as a build failure. Switch to a polling approach:
+        call ocp.get_pod_logs on the build pod every 30-60 seconds until the log shows BUILD SUCCESS or BUILD FAILURE.
+        Never re-trigger the build on a timeout — the build is still running in OCP.</note>
+    </notes>
+  </build_trigger_details>
+</ocp_deployment_guide>

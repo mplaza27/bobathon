@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <rule id="sonarqube-gates-001" priority="critical">
+    <title>Quality Gate Standards</title>
+    <description>
+      Understand and enforce quality gate conditions:
+      
+      TYPICAL QUALITY GATE CONDITIONS
+      
+      1. Reliability
+         - New Bugs = 0 (on new code)
+         - Reliability Rating = A (on new code)
+      
+      2. Security
+         - New Vulnerabilities = 0 (on new code)
+         - Security Rating = A (on new code)
+         - Security Hotspots Reviewed = 100%
+      
+      3. Maintainability
+         - New Code Smells < threshold (e.g., 5)
+         - Maintainability Rating = A (on new code)
+         - Technical Debt Ratio < 5%
+      
+      4. Coverage
+         - Coverage on New Code >= 80%
+         - Line Coverage >= 80%
+         - Branch Coverage >= 70%
+      
+      5. Duplications
+         - Duplicated Lines on New Code < 3%
+         - Duplicated Blocks < threshold
+      
+      QUALITY GATE STATUS
+      - PASSED: All conditions met
+      - FAILED: One or more conditions not met
+      - ERROR: Analysis failed or incomplete
+    </description>
+  </rule>
+
+  <rule id="sonarqube-gates-002" priority="high">
+    <title>Quality Gate Failure Analysis</title>
+    <description>
+      When quality gate fails, analyze and report:
+      
+      1. IDENTIFY FAILING CONDITIONS
+         - List each condition that failed
+         - Show actual vs. expected values
+         - Indicate severity of failure
+      
+      2. CATEGORIZE FAILURES
+         - Critical: Security vulnerabilities, blocker bugs
+         - High: Major bugs, low coverage
+         - Medium: Code smells, minor duplications
+      
+      3. PROVIDE CONTEXT
+         - Show trend: improving or degrading
+         - Compare with previous analysis
+         - Identify affected modules/files
+      
+      4. SUGGEST ACTIONS
+         - Prioritize fixes by impact
+         - Provide specific remediation steps
+         - Estimate effort required
+      
+      5. REPORT FORMAT
+         ```
+         ❌ Quality Gate: FAILED
+         
+         Failing Conditions:
+         1. [CRITICAL] New Vulnerabilities: 2 (Expected: 0)
+            - Fix security issues in AuthService.java
+            - Update vulnerable dependencies
+         
+         2. [HIGH] Coverage on New Code: 65% (Expected: ≥80%)
+            - Add tests for PaymentService
+            - Increase test coverage in OrderController
+         
+         3. [MEDIUM] Code Smells: 8 (Expected: <5)
+            - Reduce complexity in processOrder()
+            - Extract duplicate code in validation methods
+         ```
+    </description>
+  </rule>
+
+  <rule id="sonarqube-gates-003" priority="high">
+    <title>Quality Gate Success Reporting</title>
+    <description>
+      When quality gate passes, provide comprehensive report:
+      
+      ✅ Quality Gate: PASSED
+      
+      All conditions met:
+      - ✅ New Bugs: 0
+      - ✅ New Vulnerabilities: 0
+      - ✅ Security Hotspots Reviewed: 100%
+      - ✅ Coverage on New Code: 85%
+      - ✅ Duplicated Lines: 1.2%
+      
+      Quality Ratings:
+      - Reliability: A
+      - Security: A
+      - Maintainability: A
+      
+      Key Metrics:
+      - Total Issues: 12 (down from 18)
+      - Technical Debt: 2d 4h (reduced by 1d)
+      - Code Coverage: 82%
+      
+      Recommendations:
+      - Continue monitoring security hotspots
+      - Maintain test coverage above 80%
+      - Address remaining minor code smells
+    </description>
+  </rule>
+
+  <rule id="sonarqube-gates-004" priority="medium">
+    <title>Custom Quality Gate Configuration</title>
+    <description>
+      Suggest custom quality gates based on project needs:
+      
+      STRICT GATE (High-Security Projects)
+      - Zero tolerance for vulnerabilities
+      - 90% coverage requirement
+      - No blocker/critical issues
+      - Security hotspots 100% reviewed
+      
+      STANDARD GATE (Enterprise Projects)
+      - No new vulnerabilities
+      - 80% coverage on new code
+      - Reliability rating A
+      - Technical debt ratio < 5%
+      
+      LENIENT GATE (Legacy Modernization)
+      - Focus on new code quality
+      - 70% coverage on new code
+      - No new blocker bugs
+      - Gradual improvement targets
+      
+      STARTUP GATE (Fast-Moving Projects)
+      - Balance speed and quality
+      - 75% coverage
+      - No critical security issues
+      - Manageable technical debt
+    </description>
+  </rule>
+</rules>
+
+<!-- Made with Bob -->

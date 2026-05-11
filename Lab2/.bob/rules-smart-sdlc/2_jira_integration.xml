@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jira_integration_guide>
+  <overview>
+    This guide provides detailed instructions for integrating with Jira using the MCP server
+    to fetch user stories, update issues, and manage the development workflow.
+    
+    IMPORTANT: The Jira MCP server is deployed in OpenShift Container Platform (OCP) and
+    accessed remotely via SSE (Server-Sent Events). This is NOT a local server.
+  </overview>
+
+  <available_mcp_tools>
+    <important>
+      ALWAYS use these exact tool names when calling the Jira MCP server (mcp-atlassian).
+      Do NOT guess or invent tool names. If a tool call fails, check this list first.
+      
+      CRITICAL: The MCP server name is "mcp-atlassian" NOT "jira"
+    </important>
+    <tool name="jira_get_issue">
+      <description>Fetch a single Jira issue by key</description>
+      <parameters>issue_key (required) — e.g. "SCRUM-1"</parameters>
+      <example>
+        <use_mcp_tool>
+        <server_name>mcp-atlassian</server_name>
+        <tool_name>jira_get_issue</tool_name>
+        <arguments>{"issue_key": "SCRUM-1"}</arguments>
+        </use_mcp_tool>
+      </example>
+    </tool>
+    <tool name="jira_search">
+      <description>Search for issues using JQL</description>
+      <parameters>jql (required), limit (optional), start_at (optional)</parameters>
+      <example>
+        <use_mcp_tool>
+        <server_name>mcp-atlassian</server_name>
+        <tool_name>jira_search</tool_name>
+        <arguments>{"jql": "project = SCRUM AND status = 'To Do'", "limit": 10}</arguments>
+        </use_mcp_tool>
+      </example>
+    </tool>
+    <tool name="jira_add_comment">
+      <description>Add a comment to a Jira issue</description>
+      <parameters>issue_key (required), body (required)</parameters>
+      <note>The correct tool name is jira_add_comment with parameter "body" NOT "comment"</note>
+      <example>
+        <use_mcp_tool>
+        <server_name>mcp-atlassian</server_name>
+        <tool_name>jira_add_comment</tool_name>
+        <arguments>{"issue_key": "SCRUM-1", "body": "Implementation complete"}</arguments>
+        </use_mcp_tool>
+      </example>
+    </tool>
+    <tool name="jira_transition_issue">
+      <description>Move an issue to a new workflow state (e.g. Done)</description>
+      <parameters>issue_key (required), transition_id (required)</parameters>
+      <note>Use jira_get_transitions first to get valid transition IDs</note>
+      <example>
+        <use_mcp_tool>
+        <server_name>mcp-atlassian</server_name>
+        <tool_name>jira_transition_issue</tool_name>
+        <arguments>{"issue_key": "SCRUM-1", "transition_id": "41"}</arguments>
+        </use_mcp_tool>
+      </example>
+    </tool>
+    <tool name="jira_get_transitions">
+      <description>List available workflow transitions for an issue</description>
+      <parameters>issue_key (required)</parameters>
+      <usage>Call this before jira_transition_issue to get valid transition IDs</usage>
+      <example>
+        <use_mcp_tool>
+        <server_name>mcp-atlassian</server_name>
+        <tool_name>jira_get_transitions</tool_name>
+        <arguments>{"issue_key": "SCRUM-1"}</arguments>
+        </use_mcp_tool>
+      </example>
+    </tool>
+  </available_mcp_tools>
+
+  <jira_configuration>
+    <project_details>
+      <project_key>${JIRA_PROJECT_KEY}</project_key>
+      <project_url>${JIRA_PROJECT_URL}</project_url>
+      <base_url>${JIRA_BASE_URL}</base_url>
+    </project_details>
+
+    <authentication>
+      <note>IBM Bob authenticates to the Jira MCP server using the API key configured in local `.bob/mcp.json`.</note>
+      <note>Upstream Jira credentials are handled server-side by the remote OCP MCP server.</note>
+    </authentication>
+
+    <mcp_server_config>
+      <server_name>mcp-atlassian</server_name>
+      <note>CRITICAL: Always use "mcp-atlassian" as the server_name, NOT "jira"</note>
+      <url>${JIRA_MCP_URL}</url>
+      <transport>sse</transport>
+      <deployment>remote_ocp</deployment>
+      <location>IBM TechZone - OpenShift Container Platform</location>
+      <endpoint>https://jira-mcp-sonarqube.apps.itz-qqksk0.infra01-lb.dal14.techzone.ibm.com/sse</endpoint>
+    </mcp_server_config>
+  </jira_configuration>
+
+  <fetching_issues>
+    <workflow>
+      <step number="1">
+        <title>Identify Issue to Work On</title>
+        <description>
+          Determine which Jira issue needs to be processed. This can be:
+          - Explicitly provided by user (e.g., "Work on KAN-2")
+          - Selected from a list of available issues
+          - The next issue in the sprint backlog
+        </description>
+      </step>
+
+      <step number="2">
+        <title>Use MCP Tools to Fetch Issue</title>
+        <description>
+          Use the Jira MCP server tools to retrieve issue details.
+          The MCP server provides tools for:
+          - Listing issues in a project
+          - Getting detailed issue information
+          - Searching for specific issues
+          - Fetching issue comments and attachments
+        </description>
+        <example_usage>
+          When user says "Work on KAN-2" or "Implement the feature in KAN-2",
+          use the MCP Jira tools to fetch the complete issue details including:
+          - Issue summary and description
+          - Acceptance criteria
+          - Explicit automated deployment directive, if present
+          - Exact target OpenShift namespace, if present
+          - Story points and priority
+          - Current status and assignee
+          - Comments and history
+          - Linked issues and dependencies
+        </example_usage>
+      </step>
+
+      <step number="3">
+        <title>Parse Issue Details</title>
+        <description>
+          Extract and structure the relevant information from the Jira issue
+        </description>
+        <key_information>
+          <item>Summary - Brief description of the feature/task</item>
+          <item>Description - Detailed explanation of requirements</item>
+          <item>Acceptance Criteria - Specific conditions that must be met</item>
+          <item>Story Points - Complexity estimate</item>
+          <item>Priority - Urgency level</item>
+          <item>Labels - Tags for categorization</item>
+          <item>Components - Affected system components</item>
+          <item>Attachments - Design docs, mockups, etc.</item>
+          <item>Deployment Directive - Exact statement saying whether automated deployment is required</item>
+          <item>Target Namespace - Exact OpenShift namespace when deployment is required</item>
+        </key_information>
+      </step>
+    </workflow>
+
+    <handling_different_issue_types>
+      <issue_type name="Story">
+        <description>User stories describing features from user perspective</description>
+        <focus>
+          - Understand user value and business context
+          - Identify acceptance criteria
+          - Plan implementation approach
+          - Consider user experience
+        </focus>
+      </issue_type>
+
+      <issue_type name="Bug">
+        <description>Defects or issues in existing functionality</description>
+        <focus>
+          - Understand the problem and reproduction steps
+          - Identify root cause
+          - Implement fix
+          - Add regression tests
+          - Verify fix resolves the issue
+        </focus>
+      </issue_type>
+
+      <issue_type name="Task">
+        <description>Technical tasks or chores</description>
+        <focus>
+          - Understand technical requirements
+          - Follow best practices
+          - Document changes
+          - Update relevant documentation
+        </focus>
+      </issue_type>
+
+      <issue_type name="Epic">
+        <description>Large features broken into multiple stories</description>
+        <focus>
+          - Understand overall epic scope
+          - Identify which stories to work on
+          - Ensure consistency across related stories
+          - Track progress toward epic completion
+        </focus>
+      </issue_type>
+    </handling_different_issue_types>
+  </fetching_issues>
+
+  <parsing_acceptance_criteria>
+    <overview>
+      Acceptance criteria define the conditions that must be satisfied for the story to be
+      considered complete. They are typically written in Given-When-Then format or as a
+      checklist.
+    </overview>
+
+    <formats>
+      <format name="Given-When-Then">
+        <description>Behavior-driven development style criteria</description>
+        <example><![CDATA[
+Given I am a logged-in user
+When I click the "Submit Order" button
+Then the order should be processed
+And I should see a confirmation message
+And I should receive an email confirmation
+        ]]></example>
+        <parsing_approach>
+          - Extract preconditions (Given)
+          - Identify actions (When)
+          - List expected outcomes (Then/And)
+          - Map to test scenarios
+        </parsing_approach>
+      </format>
+
+      <format name="Checklist">
+        <description>Simple list of requirements</description>
+        <example><![CDATA[
+- [ ] User can submit an order
+- [ ] Order is validated before processing
+- [ ] Confirmation message is displayed
+- [ ] Email notification is sent
+- [ ] Order appears in user's order history
+        ]]></example>
+        <parsing_approach>
+          - Treat each item as a requirement
+          - Ensure all items are addressed
+          - Verify each item can be tested
+        </parsing_approach>
+      </format>
+
+      <format name="Narrative">
+        <description>Descriptive text explaining requirements</description>
+        <parsing_approach>
+          - Extract key requirements from text
+          - Identify must-have vs nice-to-have features
+          - Convert to actionable tasks
+          - Clarify ambiguities with user if needed
+        </parsing_approach>
+      </format>
+    </formats>
+
+    <validation>
+      <check>All acceptance criteria are clear and testable</check>
+      <check>No ambiguous or vague requirements</check>
+      <check>Criteria cover both happy path and edge cases</check>
+      <check>Non-functional requirements are identified</check>
+      <check>Dependencies on other stories are noted</check>
+    </validation>
+  </parsing_acceptance_criteria>
+
+  <updating_jira_issues>
+    <when_to_update>
+      <scenario>When starting work on an issue</scenario>
+      <scenario>When implementation is complete</scenario>
+      <scenario>When blockers are encountered</scenario>
+      <scenario>When additional information is needed</scenario>
+      <scenario>When moving issue through workflow states</scenario>
+    </when_to_update>
+
+    <update_types>
+      <update_type name="status_change">
+        <description>Move issue through workflow states</description>
+        <common_transitions>
+          <transition from="To Do" to="In Progress">Starting work</transition>
+          <transition from="In Progress" to="Code Review">Implementation complete</transition>
+          <transition from="Code Review" to="Testing">Code approved</transition>
+          <transition from="Testing" to="Done">Testing passed</transition>
+        </common_transitions>
+      </update_type>
+
+      <update_type name="add_comment">
+        <description>Add progress updates or notes</description>
+        <best_practices>
+          - Provide clear, concise updates
+          - Include relevant technical details
+          - Mention any blockers or issues
+          - Link to related commits or PRs
+          - Tag relevant team members
+        </best_practices>
+        <example_comments>
+          <comment>Implementation complete. Added new payment processing service with support for credit cards and PayPal. All unit tests passing.</comment>
+          <comment>Blocked: Need clarification on error handling for failed payments. Should we retry automatically or require user action?</comment>
+          <comment>Code review complete. Addressed all feedback. Ready for testing.</comment>
+        </example_comments>
+      </update_type>
+
+      <update_type name="update_fields">
+        <description>Modify issue fields</description>
+        <common_updates>
+          <field>Assignee - Assign to yourself when starting work</field>
+          <field>Story Points - Update if complexity changes</field>
+          <field>Labels - Add technical tags</field>
+          <field>Fix Version - Set target release</field>
+          <field>Time Tracking - Log work hours</field>
+        </common_updates>
+      </update_type>
+    </update_types>
+
+    <mcp_update_workflow>
+      <step>Use MCP Jira tools to update issue</step>
+      <step>Verify update was successful</step>
+      <step>Confirm changes are visible in Jira UI</step>
+      <step>Notify team if significant update</step>
+    </mcp_update_workflow>
+  </updating_jira_issues>
+
+  <best_practices>
+    <practice>
+      <title>Always Fetch Latest Issue Data</title>
+      <description>
+        Before starting work, fetch the latest issue details to ensure you have
+        current information including any recent comments or updates.
+      </description>
+    </practice>
+
+    <practice>
+      <title>Validate Issue is Ready for Development</title>
+      <description>
+        Check that the issue has:
+        - Clear acceptance criteria
+        - Necessary design documents
+        - No blocking dependencies
+        - Appropriate priority and story points
+      </description>
+    </practice>
+
+    <practice>
+      <title>Keep Jira Updated</title>
+      <description>
+        Regularly update the issue status and add comments to keep the team
+        informed of progress, blockers, and completion.
+      </description>
+    </practice>
+
+    <practice>
+      <title>Link Related Work</title>
+      <description>
+        When creating commits, PRs, or branches, reference the Jira issue key
+        (e.g., KAN-2) to maintain traceability.
+      </description>
+    </practice>
+
+    <practice>
+      <title>Handle Missing Information Gracefully</title>
+      <description>
+        If acceptance criteria or requirements are unclear:
+        - Add a comment in Jira requesting clarification
+        - Ask the user for additional context
+        - Make reasonable assumptions and document them
+        - Proceed with what's clear while waiting for clarification
+      </description>
+    </practice>
+  </best_practices>
+
+  <error_handling>
+    <error type="authentication_failure">
+      <symptoms>Unable to connect to Jira, 401 errors</symptoms>
+      <solutions>
+        <solution>Verify API token is valid and not expired</solution>
+        <solution>Check email address is correct</solution>
+        <solution>Ensure MCP server configuration is correct</solution>
+        <solution>Test connection with simple API call</solution>
+      </solutions>
+    </error>
+
+    <error type="issue_not_found">
+      <symptoms>404 error when fetching issue</symptoms>
+      <solutions>
+        <solution>Verify issue key is correct (e.g., KAN-2 not KAN2)</solution>
+        <solution>Check issue exists in the project</solution>
+        <solution>Ensure you have permission to view the issue</solution>
+        <solution>Try listing all issues to find the correct key</solution>
+      </solutions>
+    </error>
+
+    <error type="permission_denied">
+      <symptoms>403 error when updating issue</symptoms>
+      <solutions>
+        <solution>Verify you have edit permissions for the project</solution>
+        <solution>Check if issue is in a locked state</solution>
+        <solution>Ensure workflow allows the transition you're attempting</solution>
+        <solution>Contact project admin if permissions are needed</solution>
+      </solutions>
+    </error>
+
+    <error type="network_issues">
+      <symptoms>Timeout or connection errors</symptoms>
+      <solutions>
+        <solution>Check network connectivity</solution>
+        <solution>Verify MCP server URL is accessible</solution>
+        <solution>Try again after a brief wait</solution>
+        <solution>Check if Jira service is experiencing issues</solution>
+      </solutions>
+    </error>
+  </error_handling>
+
+  <example_workflow>
+    <scenario>User asks to work on KAN-2</scenario>
+    <steps>
+      <step number="1">
+        <action>Use MCP Jira tools to fetch issue KAN-2</action>
+        <expected_result>Receive complete issue details</expected_result>
+      </step>
+
+      <step number="2">
+        <action>Parse and display issue information</action>
+        <expected_result>
+          Show user:
+          - Issue summary
+          - Description
+          - Acceptance criteria
+          - Current status
+        </expected_result>
+      </step>
+
+      <step number="3">
+        <action>Update issue status to "In Progress"</action>
+        <expected_result>Issue status changed in Jira</expected_result>
+      </step>
+
+      <step number="4">
+        <action>Analyze codebase and implement changes</action>
+        <expected_result>Code changes made according to requirements</expected_result>
+      </step>
+
+      <step number="5">
+        <action>Add comment to Jira with implementation summary</action>
+        <expected_result>Comment visible in Jira issue</expected_result>
+      </step>
+
+      <step number="6">
+        <action>Update issue status to "Code Review" or "Done"</action>
+        <expected_result>Issue moved to next workflow state</expected_result>
+      </step>
+    </steps>
+  </example_workflow>
+</jira_integration_guide>
+
+<!-- Made with Bob -->
