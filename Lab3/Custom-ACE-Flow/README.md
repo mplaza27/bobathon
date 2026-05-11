@@ -1,17 +1,41 @@
 ## Custom ACE Flow Lab Exercise
 
-Welcome to creating your very own custom ACE workflow! This lab consists of two sections: first, you'll create your own custom ACE flow from scratch using Bob, and second you'll create your own personalized, finely-tuned custom Bob mode to make your ACE flow repeatable.
+Welcome to creating your very own custom ACE workflow! In this lab, you'll create your own custom Bob Mode from scratch, and then you'll perform some modifications on it and perform a security scan as well. All you'll have to do is instruct Bob on what to do, and he'll do the heavy lifting!
 Please reference the steps below to get started.
 
 ### Section 0: Prerequisites
 - Bob installed and logged in
-- Custom-ACE-Flow files (example_prompts.txt) downloaded on your VM
 
 ### Section 1: Creating your First Custom ACE Flow
-To create your custom ACE flow, please copy and paste the first example prompt. Let Bob do the building for you!
 
 
 #### Command 1.1: Create your Custom ACE Flow
+
+Let's get started building your own custom ACE flow! You can put Bob to work from scratch, by starting with the example prompt below. Please open a new Bob chat and copy/paste this prompt to get started.
+
+`Prompt #1: Create ACE Flow
+
+Please construct a minimal, demo-ready IBM App Connect Enterprise environment here in this folder. Please create the simplest possible ACE workflow that proves ACE can receive an HTTP request, transform/enrich the message, and return a clean JSON response, to meet the example request below.
+
+Input JSON:
+{
+  "customerId": "123",
+  "customerName": "Acme Corp",
+  "requestType": "status"
+}
+
+Return JSON:
+{
+  "customerId": "123",
+  "customerName": "Acme Corp",
+  "requestType": "status",
+  "status": "Processed by IBM App Connect Enterprise",
+  "timestamp": "<current timestamp>"
+}
+
+Keep this intentionally minimal. Do not add MQ, databases, Kafka, authentication, CI/CD, or complex integrations unless absolutely necessary. Prioritize a clean local/containerized demo that can be shown in 5 minutes.`
+
+
 You'll see Bob iteratively walk you through several steps, where it may ask you for your preferences when creating your own ACE workflow. For the sake of time in this lab, just instruct Bob to construct assets for you ACE Flow. This can be assets such as:
  - ESQL files
  - YAML files
