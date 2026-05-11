@@ -40,6 +40,7 @@ You'll modernize it to:
 - IBM Bob IDE
   - Ensure you have IBM Bob latest version installed
   - Login through Bob to get connected
+> If you just completed `Lab1` remember to close out of Bob and re-open again inside Folder `Lab2`. The goal is to have `Lab2` be your base folder so that Bob automatically picks up the .bob folder corresponding with this Lab.
 
 - Atlassian account with Jira project access
   - The instructor should set up a free atlassian jira account here - https://www.atlassian.com/software/jira
