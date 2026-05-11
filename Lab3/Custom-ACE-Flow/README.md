@@ -41,8 +41,9 @@ To make another modification, this time to say your deployment method, you can t
 You should see Bob now making the necessary file modifications to switch the deployment method to Podman if it isn't already using Podman. If Docker was previously used, you'll see Bob delete any old Docker files to clean up your repository. You should also see Bob change any downstream files depending on this deployment method, such as the setup instructions and quick start guide. Bob should verify that the proper modifications were made also.
 
 ##### Command 1.4: Adding Additional Security Layer
+Now let's investigate this newly-constructed ACE flow from a security perpsective. Since this repository has just been created, it likely may have some exposed vulnerabilities. Try running the command below to see if there are any key vulnerabilities worth noting:
 
-
+`Please now run a preliminary vulnerability scan and let me know if any key security issues are apparent with this flow`
 
 
 
