@@ -550,6 +550,9 @@ Do I have an jira board with a user story assigned to me?
 ---
 ### Main Workflow: See how the defined custom mode interacts with Jira MCP server and rules we have defined to perform Java modernization
 - Open Bob chat and chose the 'Smart SDLC' Mode
+
+![img_9.png](screenshots/img_9.png)
+
 - Now ask bob the following in the chat:
 ```text
 Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement it
