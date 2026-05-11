@@ -511,31 +511,6 @@ Do I have an jira board with a user story assigned to me?
 
 ## Step 6: Let's Ask Bob to Do All Our Work Now!
 
-### Understand the need:
-#### What is This Application?
-
-The **Simple Pharmacy Management System** is a web-based application designed to manage pharmacy operations including:
-- **Prescriptions**: Create and validate patient prescriptions
-- **Orders**: Process medication orders and payments
-- **Medicines**: Manage medicine inventory
-- **Dashboard**: Monitor pending prescriptions and orders
-
-#### What is Java Modernization?
-
-Java Modernization is the process of upgrading legacy Java applications to modern versions and platforms. This typically involves:
-- **Java Version Upgrade**: Moving from older Java versions (like Java 8) to newer LTS versions (like Java 21)
-- **Application Server Migration**: Transitioning from traditional servers (like WebSphere) to lightweight runtimes (like Liberty)
-- **Dependency Updates**: Modernizing libraries and frameworks to current, supported versions
-- **Code Transformation**: Updating code patterns to leverage modern Java features
-
-#### About This Lab
-
-In this Lab, you'll use IBM Bob's **Java Modernization mode** to modernize a legacy pharmacy management application. The application currently runs on:
-- **Java Version**: 8
-You'll modernize it to:
-- **Java Version**: 21
-
-
 ---
 ### Main Workflow: See how the defined custom mode interacts with Jira MCP server and rules we have defined to perform Java modernization
 - Open Bob chat and chose the 'Smart SDLC' Mode
