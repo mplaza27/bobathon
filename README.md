@@ -100,10 +100,31 @@ You should now see an "Authentication Successful" message appear in your VM brow
 .
 
 
-You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to begin using Bob here in the interactive Bob chat window. Here, you will enter commands for Bob to execute. Simply provide plain English and Bob will get to work completing your requests.
+You will now see the Bob IDE screen, which should look like this. If this is what you see, you are now logged into our Bob Enterprise account and are ready to open the Bobathon files directory:
 ![Step 12](./Costco_Bobathon_Setup_Screenshots/12.png)
 .
  
+.
+
+
+Now let's open the Bobathon files directory. To do so, select "File" in the upper left-hand corner and select "Open Folder":
+![Step 13](./Costco_Bobathon_Setup_Screenshots/13.png)
+.
+
+.
+
+
+Then navigate to "Desktop", find the "Bobathon" directory, and hit the "Open" button in the upper right-hand corner.
+![Step 14](./Costco_Bobathon_Setup_Screenshots/14.png)
+.
+
+.
+
+
+Now you should see a Bob screen that looks like this. If so, you're ready to begin the lab exercises by typing into Bob's interactive chat window.
+![Step 15](./Costco_Bobathon_Setup_Screenshots/15.png)
+.
+
 .
 
 
