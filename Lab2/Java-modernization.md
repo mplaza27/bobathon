@@ -490,7 +490,7 @@ Do I have an jira board with a user story assigned to me?
 ![img_9.png](screenshots/img_9.png)
 
 - Now ask bob the following in the chat:
-> Remember to change your `STORY KEY` Place holder value to your actual SCRUM identifier that you created in `Step 4`
+> Remember to change your `STORY KEY` Place holder value to your actual SCRUM identifier that you created in `Step 4`.
 
 ```text
 Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement it
