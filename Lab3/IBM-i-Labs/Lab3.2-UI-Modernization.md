@@ -250,4 +250,4 @@ article-list-app/
 - Implement dark mode toggle
 
 ## Next Steps
-- Move on to [Lab 3](./lab3-dds-to-sql-rla-refactoring.md) for RLA to SQL refactoring.
+- Move on to [Lab 3.3](./Lab3.3-DDS-to-SQL-RLA-Refactoring.md) for RLA to SQL refactoring.
