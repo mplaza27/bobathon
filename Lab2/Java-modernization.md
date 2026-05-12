@@ -87,6 +87,14 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
 
 ## Step 2: Set up the MCP Server
 
+- First setup UV so the MCP can be installed correctly:
+
+To ensure the mcp server works, you will need to have installed uv on your local. If not already installed prompt bob to install it with the following prompt:
+
+```text
+Install uv uvx package for package management for python.
+```
+
 **MCP Server (need to be set up in bob global mcp setting)**:
 - **Atlassian Jira MCP** — Bob fetches user stories and posts completion comments
   - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the Lab in the global mcp settings.
