@@ -201,4 +201,4 @@ Exec SQL
 - Ask Bob about SQL performance tips
 
 ## Next Steps
-- Move on to [Lab 4](./lab4-ibmi-mcp-mode.md) for IBM i connectivity and MCP server.
+- Please reach out to the IBM Team if you're interested in more lab guides!
