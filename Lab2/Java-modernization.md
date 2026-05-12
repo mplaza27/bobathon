@@ -237,7 +237,9 @@ Expected result:
 
 ![bob_java_prompt%20copy](./screenshots/bob_java_prompt%20copy.png)
 
-There are two potential steps where Bob might need to be reinitialized for the install to continue and be finalized, in `sceneraio A`:
+There are two potential steps where Bob might need to be reinitialized for the install to continue and be finalized, if this happens you will have to close out of the Bob Chat window and re-open the messages that you were just on:
+
+`sceneraio A`:
 
 ![bob_java_block_a%20copy](./screenshots/bob_java_block_a%20copy.png)
 
@@ -245,7 +247,6 @@ or `scenario B`:
 
 ![bob_java_block_b%20copy](./screenshots/bob_java_block_b%20copy.png)
 
-Just close out of the Bob Chat window and re-open the messages that you were just on:
 
 ![bob_java_continue%20copy](./screenshots/bob_java_continue%20copy.png)
 
@@ -255,118 +256,7 @@ and then continue with `Resume Task`:
 
 ### Check Maven
 
-```bash
-mvn -version
-```
-> This should have been ran with the above prompt so feel free to check if the version matches below, or run again in the terminal to cross check the version.
-
-**Expected output:** Maven 3.x
-
-**If not installed:**
-```bash
-# Install Maven via SDKMAN
-sdk install maven
-
-# Verify
-mvn -version
-```
-You should see Maven version information along with the Java version that Maven is using.
-
-
-### For OpenShift VM:
-You might have to install curl before doing any of the steps. Here are the detailed steps to ensure you have Java setup properly on your VM.
-
-Install the required packages before installing SDKMAN!:
-
-```bash
-sudo dnf update -y
-sudo dnf install -y zip unzip curl which
-```
-
-SDKMAN! installation on Linux systems may require tools such as `zip`, `unzip`, and `curl`.
-
-```bash
-curl -s "https://get.sdkman.io" | bash
-source "$HOME/.sdkman/bin/sdkman-init.sh"
-```
-
-### Verify Installation
-
-```bash
-sdk version
-```
-
-You should see output similar to:
-
-```text
-SDKMAN! 5.x.x
-```
-
-### Persist SDKMAN in Your Shell
-
-To make SDKMAN! available in future terminal sessions, add it to your shell profile:
-
-```bash
-echo 'source "$HOME/.sdkman/bin/sdkman-init.sh"' >> ~/.bash_profile
-source ~/.bash_profile
-```
-
-For detailed instructions, visit: [https://sdkman.io/install/](https://sdkman.io/install/)
-
-After installing SDKMAN!, install Maven:
-
-```bash
-sdk install maven
-```
-
-### Verify Maven Installation
-
-```bash
-mvn --version
-```
-
-### Alternative to SDKMAN
-If you prefer not to use SDKMAN!, install Java 21 directly with the native RHEL package manager:
-
-```bash
-sudo dnf install -y java-21-openjdk-devel
-```
-
-### Set `JAVA_HOME`
-
-Add Java 21 to your shell profile:
-
-```bash
-echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk' >> ~/.bash_profile
-source ~/.bash_profile
-```
-
-### Install Maven Natively
-
-```bash
-sudo dnf install -y maven
-```
-
-### Verify Java and Maven
-
-```bash
-java -version
-mvn -version
-```
-
-Expected output:
-
-```text
-Maven 3.x
-```
-
-Red Hat provides OpenJDK 21 packages for RHEL, and Maven can also be installed through the system package manager.
-
-```bash
-mvn -version
-```
-
-You should see Maven version information along with the Java version that Maven is using.
+You should see Maven version information along with the Java version that Maven is using at the end of this prompt.
 
 
 ### **Important Note on Java Versions:**
