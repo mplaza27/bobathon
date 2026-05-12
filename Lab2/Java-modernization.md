@@ -168,57 +168,97 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
 
 
 ## Step 3: Setup Java
-### 3.1 SDKMAN! (SDK Manager)
-SDKMAN! is a tool for managing parallel versions of multiple Software Development Kits on Unix-based systems.
 
-**Installation Instructions:**
-```bash
-curl -s "https://get.sdkman.io" | bash
-source "$HOME/.sdkman/bin/sdkman-init.sh"
+Great, now navigate to Bob and enter the following in the Bob chat window. This will automate the install process and have Bob take care of it for you.
+
+![bob_open_image%20copy](./screenshots/bob_open_image%20copy.png)
+
+Paste the following:
+
 ```
+Please walk step-by-step through the commands below, telling me each step of the way where you are at when following the commands provided below, and please run each command in a separate step, in order. Please start from the top and work your way down, running each command you see one-by-one in the steps below:
 
-**Verify Installation:**
-```bash
-sdk version
-```
+# OpenShift VM Setup Instructions
 
-You should see output like: `SDKMAN! 5.x.x`
+## 3.1 Java 21 and Maven - OpenShift VM
 
-**For detailed instructions, visit:** https://sdkman.io/install/
+For a Red Hat OpenShift VM, the smoothest first-time setup is to use the native RHEL packages for Java and Maven instead of installing Java through SDKMAN!. This avoids version mismatches where Maven picks up Java 17 even though Java 21 is installed.
 
-### 3.2 Maven (via SDKMAN!)
-After installing SDKMAN!, install Maven:
+### Install Java 21 and Maven
 
-```bash
-sdk install maven
-```
+sudo dnf update -y
+sudo dnf install -y java-21-openjdk java-21-openjdk-devel maven
 
-**Verify Maven Installation:**
-```bash
-mvn --version
-```
 
-**Alternative: Install Java 21 without SDKMAN**
+This installs the Java 21 runtime, Java 21 development tools, and Maven from the RHEL repositories.
 
-If you prefer not to upgrade Bash, install Java 21 directly:
+### Set Java 21 as the Active Default
 
-```bash
-# macOS with Homebrew
-brew install openjdk@21
+If multiple Java versions are installed, explicitly switch both `java` and `javac` to Java 21:
 
-# Add to PATH
-echo 'export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
 
-# Verify
+sudo alternatives --config java
+sudo alternatives --config javac
+
+When prompted, select the option for Java 21, which typically points to a path like:
+
+/usr/lib/jvm/java-21-openjdk-21.0.11.0.10-1.el9.x86_64/bin/java
+/usr/lib/jvm/java-21-openjdk-21.0.11.0.10-1.el9.x86_64/bin/javac
+
+Using `alternatives` is the key step on RHEL systems when both Java 17 and Java 21 are installed, because the system may otherwise continue using Java 17 by default.
+
+### Set JAVA_HOME
+
+After switching the alternatives, set `JAVA_HOME` to the Java 21 JDK path:
+
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export PATH="$JAVA_HOME/bin:$PATH"
+
+To make this persistent for future sessions:
+
+echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk' >> ~/.bash_profile
+echo 'export PATH="$JAVA_HOME/bin:$PATH"' >> ~/.bash_profile
+source ~/.bash_profile
+
+On RHEL, `/usr/lib/jvm/java-21-openjdk` is typically a symlink managed by the alternatives system, which makes it a stable `JAVA_HOME` value. [file:61]
+
+### Verify Java and Maven
+
 java -version
+javac -version
+mvn -version
+
+Expected result:
+- `java -version` should show OpenJDK 21.
+- `javac -version` should show version 21.
+- `mvn -version` should show Maven 3.x and report Java 21 as the runtime.
+
 ```
+
+![bob_java_prompt%20copy](./screenshots/bob_java_prompt%20copy.png)
+
+There are two potential steps where Bob might need to be reinitialized for the install to continue and be finalized, in `sceneraio A`:
+
+![bob_java_block_a%20copy](./screenshots/bob_java_block_a%20copy.png)
+
+or `scenario B`:
+
+![bob_java_block_b%20copy](./screenshots/bob_java_block_b%20copy.png)
+
+Just close out of the Bob Chat window and re-open the messages that you were just on:
+
+![bob_java_continue%20copy](./screenshots/bob_java_continue%20copy.png)
+
+and then continue with `Resume Task`:
+
+![bob_resume_task%20copy](./screenshots/bob_resume_task%20copy.png)
 
 ### Check Maven
 
 ```bash
 mvn -version
 ```
+> This should have been ran with the above prompt so feel free to check if the version matches below, or run again in the terminal to cross check the version.
 
 **Expected output:** Maven 3.x
 
