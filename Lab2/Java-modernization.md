@@ -95,6 +95,9 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
   - Click on MCP and open the global mcp setting
   - ![img_3.png](screenshots/img_3.png)
   - Copy the following MCP server connection details as a new mcp in the json file that opens: (you can remove the disabled tools section, we only added it to restrict scope of the mcp server)
+  > **IMPORTANT** Make sure to change `JIRA_URL`, `JIRA_USERNAME`, `JIRA_API_TOKEN` to your actual `URL`, `USERNAME` and `API TOKEN` accordingly.
+
+
   ```bash
           "mcp-atlassian": {
             "command": "uvx",
@@ -490,7 +493,7 @@ Do I have an jira board with a user story assigned to me?
 ![img_9.png](screenshots/img_9.png)
 
 - Now ask bob the following in the chat:
-> Remember to change your `STORY KEY` Place holder value to your actual SCRUM identifier that you created in `Step 4`.
+> **IMPORTANT** Remember to change your `STORY KEY` Place holder value to your actual SCRUM identifier that you created in `Step 4`.
 
 ```text
 Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement it
