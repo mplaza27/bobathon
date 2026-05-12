@@ -508,10 +508,18 @@ Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement 
 ```
 - And that's it. The mode will come up with an execution plan based on the requirement and acceptance criteria mentioned in the user story and work on it. It will also update the user-story with details of the entire workflow Bob did once the deployment is successful.
 - the mode does have checkpoint prints so you will be able to see what Bob is trying throughout the process.
+- When Bob starts working on the task, check your Jira Board and you should see the task/ticket been moved to 'In progress' status
+- ![jiraboard_ip](./screenshots/jiraboard_ip.png)
+- Once the task is completed, it will be moved to "Done" and you would have a comment with details on the tasks Bob did.
+- ![jiraboard_done](./screenshots/jiraboard_done.png)
+- ![jiraboard_comment](./screenshots/jiraboard_comment.png)
+- At one of the checkpoints bob will also prompt you to open the new modernized dashboard and you can see the java app working.
+- ![javadashboard1](./screenshots/javadashboard1.png)
+- ![javadashboard2](./screenshots/javadashboard2.png)
+- ![javadashboard3](./screenshots/javadashboard3.png)
+- ![javadashboard4](./screenshots/javadashboard4.png)
 
----
-
-### Optional: Advanced Mode for inbuilt browser testing
+This concludes the main Java modernization Lab!
 
 ---
 
