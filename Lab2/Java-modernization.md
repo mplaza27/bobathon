@@ -247,6 +247,7 @@ or `scenario B`:
 
 ![bob_java_block_b%20copy](./screenshots/bob_java_block_b%20copy.png)
 
+Re-open the messages that you were just on:
 
 ![bob_java_continue%20copy](./screenshots/bob_java_continue%20copy.png)
 
