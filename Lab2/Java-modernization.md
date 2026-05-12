@@ -291,14 +291,14 @@ Every participant needs a Jira User Story to work with. Here is the story that n
 ### 4.1 Open up Jira
 To add a Jira Ticket go to the following board - https://ce-squad-7.atlassian.net/jira/software/projects/SCRUM/boards/1
 
-### 4.2 Click Create Ticket
+### 4.2 Click Create
 Click on `+Create` on either the top of the board or on the bottom of the `TO-DO` list
 
 ![jira_create](./screenshots/jira_create.png)
 > This shows a jira board that's already populated, the steps are the same even if you have an empty board.
 
-### 4.3 Paste Ticket Information
-Start by adding the following `Summary` and `Description` to the ticket and press `Create`.
+### 4.3 Paste Task Information
+Start by adding the following `Summary` and `Description` to the task and press `Create`.
 
 `Summary`:
 ```
