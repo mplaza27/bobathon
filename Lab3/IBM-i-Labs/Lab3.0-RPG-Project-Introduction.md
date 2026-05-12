@@ -237,4 +237,4 @@ You've successfully completed this lab when:
 
 You are now ready to begin the modernization labs:
 
-- **[Lab 3.1](Lab3.1-RPG-Documentation.md.md)** — Convert Fixed-format RPG to Free-format using Bob
+- **[Lab 3.1](Lab3.1-RPG-Documentation.md)** — Convert Fixed-format RPG to Free-format using Bob
