@@ -125,4 +125,4 @@ You've successfully completed this lab when:
 - Ask Bob to convert an entire panel (pnl02)
 
 ## Next Steps
-- Move on to [Lab 2](./lab2-ui-modernization-react-carbon.md) for UI modernization
+- Move on to [Lab 3.2](./Lab3.2-UI-Modernization.md) for UI modernization
