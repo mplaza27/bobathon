@@ -472,7 +472,12 @@ Now you should see the ticket on your `Board` page. If you do, you have successf
 ```text
 Do I have an jira board with a user story assigned to me?
 ```
+
+![SCRUM_end_of_step_5](./screenshots/SCRUM_end_of_step_5.png)
+> Example result.
+
 - Bob should be able to connect to the board via the mcp, verify your email id based on the connection you have set up and fetch you the correct information.
+
 - Once this works you are all set to work on your tickets.
 
 
