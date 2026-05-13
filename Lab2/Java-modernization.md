@@ -1,6 +1,6 @@
 # IBM Bob Lab — Java Modernization Lab Guide
 
-**Duration:** 45 minutes
+**Duration:** 45 minutes  
 **Objective:** Learn to use Bob as an AI-powered Java Modernization Expert.
 
 ## Learning Objectives
@@ -13,7 +13,7 @@ By completing this lab, you will be able to:
 - Create comprehensive documentation automatically
 
 ## About This Lab
-In this lab we will use a generic user story defined in Jira tasks board to modify a legacy java app to a newer stack. We will leverage MCP servers to connect, read and modify a Jira task/ticket and a custom Bob mode to enhance the web application.
+In this lab we will use a generic user story defined in Jira tasks board to modify a legacy Java app to a newer stack. We will leverage MCP servers to connect, read and modify a Jira task/ticket and a custom Bob mode to enhance the web application.
 
 ### Understand the need:
 #### What is This Application?
@@ -30,8 +30,9 @@ Java Modernization is the process of upgrading legacy Java applications to moder
 - **Dependency Updates**: Modernizing libraries and frameworks to current, supported versions
 - **Code Transformation**: Updating code patterns to leverage modern Java features
 
-In this lab, you'll use a custom sdlc mode that you define to modernize a legacy pharmacy management application. The application currently runs on:
-- **Java Version**: 8
+In this lab, you'll use a custom SDLC mode that you define to modernize a legacy pharmacy management application. The application currently runs on:
+- **Java Version**: 8  
+
 You'll modernize it to:
 - **Java Version**: 21
 
@@ -43,10 +44,10 @@ You'll modernize it to:
 > If you just completed `Lab1` remember to close out of Bob and re-open again inside Folder `Lab2`. The goal is to have `Lab2` be your base folder so that Bob automatically picks up the .bob folder corresponding with this Lab.
 
 - Atlassian account with Jira project access
-  - The instructor should set up a free atlassian jira account here - https://www.atlassian.com/software/jira
+  - The instructor should set up a free atlassian Jira account here - https://www.atlassian.com/software/jira
   - Use your gmail id or any other id since IBM id will require adding you to IBM account and it would be difficult to add the Bobathon participants to it.
   - Continue to create your org space with atlassian.net domain and note it - eg: https://ce-squad-7.atlassian.net/
-  - Create a new space in your jira dashboard. Click on the '+' sign next to the "Spaces" option on the left navigation options.
+  - Create a new space in your Jira dashboard. Click on the '+' sign next to the "Spaces" option on the left navigation options.
 
 ![screenshots/image.png](screenshots/image.png)
   - Start with a Scrum or a Kanban board. Click on Scrum option and click on use template.
@@ -63,7 +64,7 @@ You'll modernize it to:
 ![img.png](screenshots/img.png)
 
 - Custom mode updates (this can also be done by the participants)
-  - Modify the custom mode Lab with the jira board information. This can also be done via the env file and by prompting bob to use the jira board details from the env file. But for this Lab we would be hard coding the board details in the rules of the custom mode.
+  - Modify the custom mode Lab with the Jira board information. This can also be done via the env file and by prompting Bob to use the Jira board details from the env file. But for this Lab we would be hard coding the board details in the rules of the custom mode.
   - In the .bob/rules-smart-sdlc/1_workflow.xml file, search for the **Fetch Jira User Story** block. For the mcp configuration section add the following details:
     ```bash
     <mcp_configuration>
@@ -76,7 +77,7 @@ You'll modernize it to:
 # For Bobathon Participants:
 
 ## Step 1: Set up your Atlassian account and API
-Accept the invite from the instructor ro join a jira space, after which the instructor will be able to add you to the Jira Board.
+Accept the invite from the instructor to join a Jira space, after which the instructor will be able to add you to the Jira Board.
 Generate your Atlassian Jira api token from here - https://id.atlassian.com/manage-profile/security/api-tokens
 - Click on Create API Token. (not the scope ones)
 - ![img_6.png](screenshots/img_6.png)
@@ -89,15 +90,15 @@ Generate your Atlassian Jira api token from here - https://id.atlassian.com/mana
 
 - First setup UV so the MCP can be installed correctly:
 
-To ensure the mcp server works, you will need to have installed uv on your local. If not already installed prompt bob to install it with the following prompt:
+To ensure the mcp server works, you will need to have installed uv on your local. If not already installed prompt Bob to install it with the following prompt:
 
 ```text
 Install uv uvx package for package management for python.
 ```
 
-**MCP Server (need to be set up in bob global mcp setting)**:
+**MCP Server (need to be set up in Bob global mcp setting)**:
 - **Atlassian Jira MCP** — Bob fetches user stories and posts completion comments
-  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and bob coins is a concern, turn off function not needed for the Lab in the global mcp settings.
+  - Note: This mcp server has a lot of functions and can cause context bloat. The mcp block mentions important functions needed. If tokens and Bob coins is a concern, turn off function not needed for the Lab in the global mcp settings.
   - Open your Bob IDE and navigate to 'Bob - Settings' option at the bottom of the IDE and click on it.
   - ![img_2.png](screenshots/img_2.png)
   - Click on MCP and open the global mcp setting
@@ -174,7 +175,7 @@ Install uv uvx package for package management for python.
             ]
         }
   ```
-    -  Once added refresh all icon next to the 'All' dropdown to refresh the servers on the Bob - Settings MCP main page (where you clicked on Open for the json) just to ensure bob connects successfully. You can ignore this step if you already see the server in your mcp list with a green dot.
+    -  Once added, click Refresh all icon next to the 'All' dropdown to refresh the servers on the Bob - Settings MCP main page (where you clicked on Open for the json) just to ensure bob connects successfully. You can ignore this step if you already see the server in your mcp list with a green dot.
     - ![img_4.png](screenshots/img_4.png)
 
 
@@ -464,19 +465,19 @@ Now you should see the ticket on your `Board` page. If you do, you have successf
           Email: instructor or participant email id
     </mcp_configuration>
 ```
-- Save the file and open the bob chat interface.
+- Save the file and open the Bob chat interface.
 - At the bottom of the Bob chat pane, you'll see the current mode (e.g., "💻 Code" or "❓ Ask"). Click on the current mode name at the bottom of the chat.
 - You should see a "Smart SDLC" option now in the Bob Modes dropdown.
 - ![img_9.png](screenshots/img_9.png)
 - For ease of doing the Lab you can also set all auto approvals on
   - ![img_11.png](screenshots/img_11.png)
     - ## Auto-Approval Settings
-      Here are some of the setting how can control what Bob does automatically:
-          - **Read**: Let Bob read files without asking
-          - **Write**: Let Bob modify files without asking
-          - **Execute**: Let Bob run commands without asking
-          - **Todo**: Let Bob create task lists without asking
-          - **MCP**: Let's Bob access and connect to MCP servers automatically without asking.
+      Here are some of the setting how can control what Bob does automatically:  
+          - **Read**: Let Bob read files without asking  
+          - **Write**: Let Bob modify files without asking  
+          - **Execute**: Let Bob run commands without asking  
+          - **Todo**: Let Bob create task lists without asking  
+          - **MCP**: Let's Bob access and connect to MCP servers automatically without asking.  
 - You can also check the custom mode details on the Bob Settings page by navigating to the Modes tab
 - ![img_10.png](screenshots/img_10.png)
 - Now that you have your mode and mcp setup. Let's confirm if Bob can actually connect to the Jira Board. Switch to Advanced or Code mode and ask the following:
@@ -507,13 +508,13 @@ Do I have an jira board with a user story assigned to me?
 Retrieve the user story whose key is <YOUR-STORY-KEY eg: SCRUM-4> and implement it
 ```
 - And that's it. The mode will come up with an execution plan based on the requirement and acceptance criteria mentioned in the user story and work on it. It will also update the user-story with details of the entire workflow Bob did once the deployment is successful.
-- the mode does have checkpoint prints so you will be able to see what Bob is trying throughout the process.
+- The mode does have checkpoint prints so you will be able to see what Bob is trying throughout the process.
 - When Bob starts working on the task, check your Jira Board and you should see the task/ticket been moved to 'In progress' status
 - ![jiraboard_ip](./screenshots/jiraboard_ip.png)
 - Once the task is completed, it will be moved to "Done" and you would have a comment with details on the tasks Bob did.
 - ![jiraboard_done](./screenshots/jiraboard_done.png)
 - ![jiraboard_comment](./screenshots/jiraboard_comment.png)
-- At one of the checkpoints bob will also prompt you to open the new modernized dashboard and you can see the java app working.
+- At one of the checkpoints Bob will also prompt you to open the new modernized dashboard and you can see the Java app working.
 - ![javadashboard1](./screenshots/javadashboard1.png)
 - ![javadashboard2](./screenshots/javadashboard2.png)
 - ![javadashboard3](./screenshots/javadashboard3.png)
@@ -538,9 +539,9 @@ Have Bob use the Java Modernization workflow to analyze your current application
       Select your **Java 21** as your target. Toggle Jakarta EE 8 migration option off and click **Run Recipes**.
 * **2.2 Perform agentic upgrade**
    Bob will proceed with the upgrade task involving several subtasks. Bob will create to do list(s) and complete tasks agentically, while also allowing user intervention and approvals.
-4**Validate**
+4. **Validate**
    Select the option for Bob to Validate your application
-5**Run the application**
+5. **Run the application**
    Prompt Bob to run the Simple Pharmacy application. Follow the URL the Bob provide to view the UI of the local application.
 ---
 
